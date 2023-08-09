@@ -20,8 +20,8 @@ app.use(express.json()); // if body content-type application/json, middleware cr
 app.use(express.static("public")); // сonfigure Express to distribute static files from the public folder (http://localhost:3000/avatars/<file name with extension>)
 
 // routes app.use():
-app.use("./api/auth", authRouter);
-app.use("./api/reviews", reviewsRouter);
+app.use("/api/auth", authRouter);
+app.use("/api/reviews", reviewsRouter);
 
 // other middlewares
 app.use((req, res) => {
