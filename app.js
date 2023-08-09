@@ -3,9 +3,11 @@ const logger = require("morgan");
 const cors = require("cors");
 require("dotenv").config();
 
-const authRouter = require("./routes/api/auth-routes");
-
 // import of routes
+const authRouter = require("./routes/api/auth-routes");
+const reviewsRouter = require("./routes/api/reviews-routes");
+
+
 
 const app = express();
 
@@ -19,6 +21,7 @@ app.use(express.static("public")); // сonfigure Express to distribute static fi
 
 // routes app.use():
 app.use("./api/auth", authRouter);
+app.use("./api/reviews", reviewsRouter);
 
 // other middlewares
 app.use((req, res) => {
