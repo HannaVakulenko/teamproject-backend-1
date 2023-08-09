@@ -1,7 +1,7 @@
 {
   "name": "teamproject-backend-1",
   "version": "1.0.0",
-    "engines": {
+  "engines": {
     "node": ">=14.20.1"
   },
   "description": "",
@@ -9,7 +9,7 @@
   "scripts": {
     "test": "jest",
     "start": "cross-env NODE_ENV=production node ./server.js",
-    "start:dev": "cross-env NODE_ENV=development nodemon ./server.js",
+    "start:dev": " nodemon cross-env NODE_ENV=development nodemon ./server.js",
     "lint": "eslint **/*.js",
     "lint:fix": "eslint --fix **/*.js"
   },
