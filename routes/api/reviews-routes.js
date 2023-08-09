@@ -1,17 +1,17 @@
 const express = require("express");
-// const contacts = require("../../controllers/index");
+const reviews = require("../../controllers/reviews-controller");
 
 const router = express.Router();
 
-// router.get("/", contacts.getAllContacts);
+router.get("/", reviews.getAllReviews);
 
-// router.get("/own", contacts.getContactByID);
+router.get("/own", reviews.getReview);
 
-// router.post("/own", contacts.setContact);
+router.post("/own", reviews.setReview);
 
-// router.patch("/own", contacts.changeContact);
+router.patch("/own", reviews.changeReview);
 
-// router.delete("/own", contacts.deleteContactByID);
+router.delete("/own", reviews.deleteReview);
 
 
 
