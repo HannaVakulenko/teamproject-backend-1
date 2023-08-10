@@ -13,6 +13,7 @@ const userSchema = new Schema(
     name: { type: String, required: true },
     email: { type: String, match: emailRegexp, unique: true, required: true },
     password: { type: String, minlength: 7, required: true },
+    token: { type: String, default: "" },
   },
   { versionKey: false, timestamps: true }
 );
