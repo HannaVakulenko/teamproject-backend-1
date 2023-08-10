@@ -14,6 +14,7 @@ const schema = new mongoose.Schema(
             type: mongoose.Types.ObjectId,
             ref: "user",
         },
+        name: String,
 
         avatarURL: String,
     },

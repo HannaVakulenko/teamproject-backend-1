@@ -14,14 +14,15 @@ const setReview = async (req, res) => {
         const review = {
             review: req.body.review,
             rating: req.body.rating,
-            // owner: req.user.id,
-            owner: req.body.owner,
+            owner: req.user.id,
+            name: req.user.name,
         };
 
         const result = await Reviews.create(review);
         return res.status(201).json({
             review: result.review,
             rating: result.rating,
+            name: result.name,
         });
     } catch (error) {
         const errorMessage = error.message;
@@ -36,16 +37,17 @@ const changeReview = async (req, res, next) => {
             rating: req.body.rating,
         };
 
-        const result = await Reviews.findOneAndUpdate({ owner: req.body.owner }, review, { new: true });
+        const result = await Reviews.findOneAndUpdate({ owner: req.user.id }, review, { new: true });
         if (result === null) {
             return res.status(404).json({ message: "Not found" });
         }
-        const data = `${result.updatedAt}`;
-        console.log(data);
-        console.log(result.updatedAt.getTime());
+        // const data = `${result.updatedAt}`;
+        // console.log(data);
+        // console.log(result.updatedAt.getTime());
         return res.status(200).json({
             review: result.review,
             rating: result.rating,
+            name: result.name,
         });
     } catch (error) {
         const errorMessage = error.message;
@@ -55,7 +57,7 @@ const changeReview = async (req, res, next) => {
 
 const deleteReview = async (req, res, next) => {
     try {
-        const result = await Reviews.findOneAndDelete({ owner: req.body.owner });
+        const result = await Reviews.findOneAndDelete({ owner: req.user.id });
         if (result === null) {
             return res.status(404).json({ message: "Not found" });
         }
@@ -67,7 +69,7 @@ const deleteReview = async (req, res, next) => {
 
 const getReview = async (req, res, next) => {
     try {
-        const result = await Reviews.findOne({ owner: req.body.owner });
+        const result = await Reviews.findOne({ owner: req.user.id });
         if (result === null) {
             return res.status(404).json({ message: "Not found" });
         }
@@ -75,6 +77,7 @@ const getReview = async (req, res, next) => {
         return res.status(200).json({
             review: result.review,
             rating: result.rating,
+            name: result.name,
         });
     } catch (error) {
         const errorMessage = error.message;
