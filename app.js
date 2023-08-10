@@ -1,6 +1,8 @@
 const express = require("express");
 const logger = require("morgan");
 const cors = require("cors");
+const swaggerUi = require("swagger-ui-express");
+const swaggerDocument = require("./swagger.json");
 require("dotenv").config();
 
 // import of routes
@@ -18,6 +20,9 @@ app.use(logger(formatsLogger));
 app.use(cors());
 app.use(express.json()); // if body content-type application/json, middleware create object in req.body
 app.use(express.static("public")); // сonfigure Express to distribute static files from the public folder (http://localhost:3000/avatars/<file name with extension>)
+
+// creates route fot distribute swaggerDocument
+app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 // routes app.use():
 app.use("/api/auth", authRouter);
