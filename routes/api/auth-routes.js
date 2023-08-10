@@ -18,4 +18,7 @@ router.get("/current", authenticate, ctrl.getCurrent);
 // Logout
 router.post("/logout", authenticate, ctrl.logout);
 
+// Change user data
+router.patch("/update", authenticate, ctrl.updateUser);
+
 module.exports = router;
