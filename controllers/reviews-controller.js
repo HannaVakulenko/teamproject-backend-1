@@ -10,7 +10,7 @@ const getAllReviews = async (req, res, next) => {
         if (req.query.page === undefined) {
             return res.status(200).json(sortResult);
         }
-        return res.status(200).json(sortResult.slice((req.query.page - 1) * req.query.limit, req.query.page * req.query.limit));
+        return res.status(200).json({ reviews: sortResult.slice((req.query.page - 1) * req.query.limit, req.query.page * req.query.limit), total: sortResult.length });
     } catch (error) {
         return next(error);
     }
@@ -87,7 +87,7 @@ const getReview = async (req, res, next) => {
     try {
         const user = await User.findOne({ _id: req.user.id });
         if (!user.isReview) {
-           return res.status(200).json([]);
+            return res.status(200).json([]);
         }
         const result = await Reviews.findOne({ owner: req.user.id });
         if (result === null) {
