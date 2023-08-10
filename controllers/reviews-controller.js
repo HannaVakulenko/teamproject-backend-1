@@ -1,9 +1,15 @@
 const { Reviews } = require("../models/index");
 
-const getAllReviews = async (__, res, next) => {
+const getAllReviews = async (req, res, next) => {
     try {
         const result = await Reviews.find();
-        return res.status(200).json(result);
+        const sortResult = result.sort(function (a, b) {
+            return b.updatedAt.getTime() - a.updatedAt.getTime();
+        });
+        if (req.query.page === undefined) {
+            return res.status(200).json(sortResult);
+        }
+        return res.status(200).json(sortResult.slice((req.query.page - 1) * req.query.limit, req.query.page * req.query.limit));
     } catch (error) {
         return next(error);
     }
@@ -41,9 +47,7 @@ const changeReview = async (req, res, next) => {
         if (result === null) {
             return res.status(404).json({ message: "Not found" });
         }
-        // const data = `${result.updatedAt}`;
-        // console.log(data);
-        // console.log(result.updatedAt.getTime());
+
         return res.status(200).json({
             review: result.review,
             rating: result.rating,
