@@ -1,18 +1,17 @@
 const express = require("express");
 const reviews = require("../../controllers/reviews-controller");
+const { authenticate } = require("../../middlewares/index");
 
 const router = express.Router();
 
 router.get("/", reviews.getAllReviews);
 
-router.get("/own", reviews.getReview);
+router.get("/own", authenticate, reviews.getReview);
 
-router.post("/own", reviews.setReview);
+router.post("/own", authenticate, reviews.setReview);
 
-router.patch("/own", reviews.changeReview);
+router.patch("/own",authenticate, reviews.changeReview);
 
-router.delete("/own", reviews.deleteReview);
-
-
+router.delete("/own",authenticate, reviews.deleteReview);
 
 module.exports = router;
