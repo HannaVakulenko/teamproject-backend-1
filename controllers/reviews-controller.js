@@ -8,7 +8,7 @@ const getAllReviews = async (req, res, next) => {
             return b.updatedAt.getTime() - a.updatedAt.getTime();
         });
         if (req.query.page === undefined) {
-            return res.status(200).json(sortResult);
+            return res.status(200).json({ reviews: sortResult, total: sortResult.length });
         }
         return res.status(200).json({ reviews: sortResult.slice((req.query.page - 1) * req.query.limit, req.query.page * req.query.limit), total: sortResult.length });
     } catch (error) {
