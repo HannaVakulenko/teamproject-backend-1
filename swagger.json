@@ -124,6 +124,74 @@
           }
         }
       }
+    },
+    "/api/auth/current": {
+      "get": {
+        "tags": ["Auth"],
+        "summary": "Get current user",
+        "parameters": [],
+        "security": [{ "Bearer": [] }],
+        "requestBody": {
+          "description": "Current object",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CurrentUserRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CurrentUserResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/auth/update": {
+      "patch": {
+        "tags": ["Auth"],
+        "summary": "User profile update",
+        "parameters": [],
+        "security": [{ "Bearer": [] }],
+        "requestBody": {
+          "description": "User changes profile object",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UserUpdateRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful update",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserUpdateResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request (invalid request body)"
+          },
+          "404": {
+            "description": "Not found"
+          }
+        }
+      }
     }
   },
   "components": {
@@ -138,24 +206,6 @@
             "minLength": 3,
             "example": "Bob Smith"
           },
-          "email": {
-            "type": "string",
-            "description": "User's email",
-            "pattern": "^\\w+([\\.-]?\\w+)*@\\w+([\\.-]?\\w+)*(\\.\\w{2,3})+$",
-            "format": "email"
-          },
-          "password": {
-            "type": "string",
-            "description": "User's password",
-            "minLength": 7,
-            "example": "qwertonity"
-          }
-        }
-      },
-      "LoginRequest": {
-        "type": "object",
-        "required": ["email", "password"],
-        "properties": {
           "email": {
             "type": "string",
             "description": "User's email",
@@ -185,6 +235,24 @@
           }
         }
       },
+      "LoginRequest": {
+        "type": "object",
+        "required": ["email", "password"],
+        "properties": {
+          "email": {
+            "type": "string",
+            "description": "User's email",
+            "pattern": "^\\w+([\\.-]?\\w+)*@\\w+([\\.-]?\\w+)*(\\.\\w{2,3})+$",
+            "format": "email"
+          },
+          "password": {
+            "type": "string",
+            "description": "User's password",
+            "minLength": 7,
+            "example": "qwertonity"
+          }
+        }
+      },
       "LoginResponse": {
         "type": "object",
         "properties": {
@@ -192,6 +260,88 @@
             "type": "string",
             "description": "Access token for authorization",
             "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY0ZDYwMTRiMzBmZTlhODA2NDI5ZDFmNCIsImlhdCI6MTY5MTc0NjYzNSwiZXhwIjoxNjkxODI5NDM1fQ.dAtkjqFYB_I4r6vBHWY6d2A2kSuDpkRle9wXfG7mw1A"
+          }
+        }
+      },
+      "UserUpdateRequest": {
+        "type": "object",
+        "required": ["name", "email", "isReview"],
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "User's name",
+            "minLength": 3,
+            "example": "Bob Smith"
+          },
+          "email": {
+            "type": "string",
+            "description": "User's email",
+            "pattern": "^\\w+([\\.-]?\\w+)*@\\w+([\\.-]?\\w+)*(\\.\\w{2,3})+$",
+            "format": "email"
+          },
+          "isReview": {
+            "type": "boolean",
+            "description": "Does the user have a review?"
+          }
+        }
+      },
+      "UserUpdateResponse": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "User's name",
+            "example": "Bob Smith"
+          },
+          "email": {
+            "type": "string",
+            "description": "User's email",
+            "format": "email"
+          },
+          "isReview": {
+            "type": "boolean",
+            "description": "Does the user have a review?"
+          }
+        }
+      },
+      "CurrentUserRequest": {
+        "type": "object",
+        "required": ["name", "email", "isReview"],
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "User's name",
+            "minLength": 3,
+            "example": "Bob Smith"
+          },
+          "email": {
+            "type": "string",
+            "description": "User's email",
+            "pattern": "^\\w+([\\.-]?\\w+)*@\\w+([\\.-]?\\w+)*(\\.\\w{2,3})+$",
+            "format": "email"
+          },
+          "isReview": {
+            "type": "boolean",
+            "description": "Does the user have a review?"
+          }
+        }
+      },
+      "CurrentUserResponse": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "User's name",
+            "example": "Bob Smith"
+          },
+          "email": {
+            "type": "string",
+            "description": "User's email",
+            "format": "email"
+          },
+          "isReview": {
+            "type": "boolean",
+            "description": "Does the user have a review?"
           }
         }
       }
