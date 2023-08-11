@@ -8,6 +8,7 @@ require("dotenv").config();
 // import of routes
 const authRouter = require("./routes/api/auth-routes");
 const reviewsRouter = require("./routes/api/reviews-routes");
+const tasksRouter = require("./routes/api/tasks-routes");
 
 
 
@@ -27,6 +28,7 @@ app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 // routes app.use():
 app.use("/api/auth", authRouter);
 app.use("/api/reviews", reviewsRouter);
+app.use("/api/tasks", tasksRouter);
 
 // other middlewares
 app.use((req, res) => {
