@@ -2,17 +2,17 @@
   "openapi": "3.0.3",
   "info": {
     "version": "1.0.1",
-    "title": "API Specification of GooseTrack",
-    "description": "This is a REST API's for Task tracker with personal to-do list. The project provides for the possibility of user registration, authentication and authorization. In addition, users can create and track their tasks, assign them by completion status, view their completion statistics over a period of time, and edit and delete their tasks."
+    "title": "Goose Track API Documentation",
+    "description": "This is a REST API's for project Goose Track. [GitHub](https://github.com/HannaVakulenko/teamproject-backend-1) \n\n It is the task tracker with personal to-do list. \nThe project provides for the possibility of user registration, authentication and authorization. In addition, users can create and track their tasks, assign them by completion status, view their completion statistics over a period of time, and edit and delete their tasks. \n\n**Functional capabilities:**\n\nUser registration and authorization\n\nAbility to edit user profile and add review\n\nAdd, view, edit and delete tasks\n\nTask selection by date, possibility to determine/redefine priority and execution status\n\nDisplay of statistics for a certain period by execution statuses\n\nAbility to display the tasks on the calendar\n\nAbility to display tasks in a list by execution status\n\n**The technology stack used in the project:**\n\nNode.js - JavaScript runtime on the server\n\nExpress.js - a framework for developing web applications on Node.js\n\nMongoDB - NoSQL Database\n\nMongoose - a library for working with MongoDB in Node.js"
   },
   "consumes": ["application/json", "multipart/form-data"],
   "produces": ["application/json"],
   "servers": [
     {
-      "url": "http://localhost:8080"
+      "url": "https://goose-track-gr25.onrender.com"
     },
     {
-      "url": ""
+      "url": "http://localhost:8080"
     }
   ],
   "tags": [
@@ -47,35 +47,31 @@
           }
         },
         "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LoginResponse"
+                }
+              }
+            }
+          },
           "201": {
             "description": "Successful operation",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/RegistrationRequest"
+                  "$ref": "#/components/schemas/RegistrationResponse"
                 }
               }
             }
           },
           "400": {
-            "description": "Bad request (invalid request body)",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": ""
-                }
-              }
-            }
+            "description": "Bad request (invalid request body)"
           },
           "409": {
-            "description": "User with this email is already exist",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": ""
-                }
-              }
-            }
+            "description": "User with this email is already exist"
           }
         }
       }
@@ -102,30 +98,16 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/LoginRequest"
+                  "$ref": "#/components/schemas/LoginResponse"
                 }
               }
             }
           },
           "400": {
-            "description": "Bad request (invalid request body)",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": ""
-                }
-              }
-            }
+            "description": "Bad request (invalid request body)"
           },
           "401": {
-            "description": "Access errors (authorization or email verification)",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": ""
-                }
-              }
-            }
+            "description": "Email or password invalid"
           }
         }
       }
@@ -138,24 +120,7 @@
         "security": [{ "Bearer": [] }],
         "responses": {
           "200": {
-            "description": "Successful operation",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": ""
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "Access errors (authorization or token verification)",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": ""
-                }
-              }
-            }
+            "description": "Logout success"
           }
         }
       }
@@ -176,7 +141,7 @@
           "email": {
             "type": "string",
             "description": "User's email",
-            "pattern": "",
+            "pattern": "^\\w+([\\.-]?\\w+)*@\\w+([\\.-]?\\w+)*(\\.\\w{2,3})+$",
             "format": "email"
           },
           "password": {
@@ -194,7 +159,7 @@
           "email": {
             "type": "string",
             "description": "User's email",
-            "pattern": "",
+            "pattern": "^\\w+([\\.-]?\\w+)*@\\w+([\\.-]?\\w+)*(\\.\\w{2,3})+$",
             "format": "email"
           },
           "password": {
@@ -217,50 +182,16 @@
             "type": "string",
             "description": "User's email",
             "format": "email"
-          },
-          "_id": {
-            "type": "string",
-            "description": "User's database id",
-            "example": "64d3f758c0cd49334ba01ebe"
           }
         }
       },
       "LoginResponse": {
         "type": "object",
         "properties": {
-          "user": {
-            "type": "object",
-            "properties": {
-              "name": {
-                "type": "string",
-                "description": "User's name",
-                "example": "Bob Smith"
-              },
-              "email": {
-                "type": "string",
-                "description": "User's email",
-                "format": "email"
-              },
-              "_id": {
-                "type": "string",
-                "description": "User's database id",
-                "example": "64d3f758c0cd49334ba01ebe"
-              },
-              "birthday": {
-                "type": "string",
-                "format": "date"
-              },
-              "phone": {
-                "type": "string"
-              },
-              "skype": {
-                "type": "string"
-              }
-            }
-          },
-          "accessToken": {
+          "token": {
             "type": "string",
-            "description": "Backend access token"
+            "description": "Access token for authorization",
+            "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY0ZDYwMTRiMzBmZTlhODA2NDI5ZDFmNCIsImlhdCI6MTY5MTc0NjYzNSwiZXhwIjoxNjkxODI5NDM1fQ.dAtkjqFYB_I4r6vBHWY6d2A2kSuDpkRle9wXfG7mw1A"
           }
         }
       }
