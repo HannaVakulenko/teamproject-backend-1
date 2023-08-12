@@ -21,7 +21,7 @@ const { JWT_SECRET } = process.env;
 const avatarsDir = path.join(__dirname, "../", "public", "avatars");
 
 const login = async (req, res) => {
-  const { email, password, name } = req.body;
+  const { email, password } = req.body;
   const user = await User.findOne({ email });
 
   if (!user) {
@@ -40,7 +40,7 @@ const login = async (req, res) => {
   await User.findByIdAndUpdate(user._id, { token });
 
   res.json({
-    name,
+    name: user.name,
     email,
     password,
     token,
