@@ -51,11 +51,11 @@ const register = async (req, res) => {
   const { email, password } = req.body;
   const user = await User.findOne({ email });
 
-  const imagePath = req.file.path;
+  // const imagePath = req.file.path;
+  // console.log(imagePath);
 
   // Upload the image
-  const publicId = await uploadImage(imagePath);
-  console.log("IMAGE---", publicId);
+  // const publicId = await uploadImage(imagePath);
 
   if (user) {
     throw HttpError(409, "User with this email address already exists");
@@ -63,12 +63,12 @@ const register = async (req, res) => {
 
   const hashPassword = await bcrypt.hash(password, 10);
   // временная аватарка
-  const avatarURL = publicId || gravatar.url(email);
+  // const avatarURL = publicId || gravatar.url(email);
 
   const newUser = await User.create({
     ...req.body,
     password: hashPassword,
-    avatarURL,
+    // avatarURL,
   });
 
   // res.status(201).json({
@@ -95,11 +95,11 @@ const logout = async (req, res) => {
 const updateUser = async (req, res) => {
   const { id } = req.user;
 
-  const imagePath =
-    "https://cloudinary-devs.github.io/cld-docs-assets/assets/images/happy_people.jpg";
+  // const imagePath =
+  //   "https://cloudinary-devs.github.io/cld-docs-assets/assets/images/happy_people.jpg";
 
-  // Upload the image
-  const publicId = await uploadImage(imagePath);
+  // // Upload the image
+  // const publicId = await uploadImage(imagePath);
 
   const { name, email, password, isReview } = req.body;
   const result = await User.findByIdAndUpdate(
@@ -118,6 +118,7 @@ const updateAvatar = async (req, res) => {
   const { _id } = req.user;
 
   const imagePath = req.file.path;
+  console.log(imagePath);
 
   const avatarURL = await uploadImage(imagePath);
 
