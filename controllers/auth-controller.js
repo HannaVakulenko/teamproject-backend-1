@@ -1,14 +1,27 @@
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
+const gravatar = require("gravatar");
+const path = require("path");
+const fs = require("fs/promises");
+
+// Require the cloudinary library
+const cloudinary = require("cloudinary").v2;
+
+// Return "https" URLs by setting secure: true
+cloudinary.config({
+  secure: true,
+});
 
 const { User } = require("../models/user");
 
-const { HttpError, ctrlWrapper } = require("../helpers");
+const { HttpError, ctrlWrapper, uploadImage } = require("../helpers");
 
 const { JWT_SECRET } = process.env;
 
+const avatarsDir = path.join(__dirname, "../", "public", "avatars");
+
 const login = async (req, res) => {
-  const { email, password } = req.body;
+  const { email, password, name } = req.body;
   const user = await User.findOne({ email });
 
   if (!user) {
@@ -27,6 +40,9 @@ const login = async (req, res) => {
   await User.findByIdAndUpdate(user._id, { token });
 
   res.json({
+    name,
+    email,
+    password,
     token,
   });
 };
@@ -35,12 +51,25 @@ const register = async (req, res) => {
   const { email, password } = req.body;
   const user = await User.findOne({ email });
 
+  const imagePath = req.file.path;
+
+  // Upload the image
+  const publicId = await uploadImage(imagePath);
+  console.log("IMAGE---", publicId);
+
   if (user) {
     throw HttpError(409, "User with this email address already exists");
   }
 
   const hashPassword = await bcrypt.hash(password, 10);
-  const newUser = await User.create({ ...req.body, password: hashPassword });
+  // временная аватарка
+  const avatarURL = publicId || gravatar.url(email);
+
+  const newUser = await User.create({
+    ...req.body,
+    password: hashPassword,
+    avatarURL,
+  });
 
   // res.status(201).json({
   //   email: newUser.email,
@@ -65,17 +94,36 @@ const logout = async (req, res) => {
 
 const updateUser = async (req, res) => {
   const { id } = req.user;
+
+  const imagePath =
+    "https://cloudinary-devs.github.io/cld-docs-assets/assets/images/happy_people.jpg";
+
+  // Upload the image
+  const publicId = await uploadImage(imagePath);
+
   const { name, email, password, isReview } = req.body;
   const result = await User.findByIdAndUpdate(
     id,
     { name, email, password, isReview },
     { new: true }
   );
-  console.log(result);
+
   if (!result) {
     throw HttpError(404, "Not found");
   }
   res.json(result);
+};
+
+const updateAvatar = async (req, res) => {
+  const { _id } = req.user;
+
+  const imagePath = req.file.path;
+
+  const avatarURL = await uploadImage(imagePath);
+
+  await User.findByIdAndUpdate(_id, { avatarURL });
+
+  res.json(avatarURL);
 };
 
 module.exports = {
@@ -84,4 +132,5 @@ module.exports = {
   getCurrent: ctrlWrapper(getCurrent),
   logout: ctrlWrapper(logout),
   updateUser: ctrlWrapper(updateUser),
+  updateAvatar: ctrlWrapper(updateAvatar),
 };
