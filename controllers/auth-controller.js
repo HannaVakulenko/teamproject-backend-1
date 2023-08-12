@@ -80,9 +80,32 @@ const register = async (req, res) => {
 };
 
 const getCurrent = async (req, res) => {
-  const { user } = req;
+  const {
+    _id,
+    name,
+    email,
+    password,
+    token,
+    isReview,
+    avatarURL,
+    skype,
+    phone,
+    birthday,
+  } = req.user;
+  console.log(req.user);
 
-  res.json({ user });
+  res.json({
+    _id,
+    name,
+    email,
+    password,
+    token,
+    isReview,
+    avatarURL,
+    skype,
+    phone,
+    birthday,
+  });
 };
 
 const logout = async (req, res) => {
