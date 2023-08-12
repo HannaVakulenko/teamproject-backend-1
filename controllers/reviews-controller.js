@@ -23,6 +23,7 @@ const setReview = async (req, res) => {
             rating: req.body.rating,
             owner: req.user.id,
             name: req.user.name,
+            avatarURL: req.user.avatarURL,
         };
         const userReview = await User.findOne({ _id: req.user.id });
         if (userReview.isReview) {
@@ -60,6 +61,7 @@ const changeReview = async (req, res, next) => {
             review: result.review,
             rating: result.rating,
             name: result.name,
+            avatarURL: req.user.avatarURL,
         });
     } catch (error) {
         const errorMessage = error.message;
@@ -89,6 +91,7 @@ const getReview = async (req, res, next) => {
         if (!user.isReview) {
             return res.status(200).json([]);
         }
+        updateAvatarReview(req, res);
         const result = await Reviews.findOne({ owner: req.user.id });
         if (result === null) {
             return res.status(404).json({ message: "Not found" });
@@ -98,7 +101,26 @@ const getReview = async (req, res, next) => {
             review: result.review,
             rating: result.rating,
             name: result.name,
+            avatarURL: result.avatarURL,
         });
+    } catch (error) {
+        const errorMessage = error.message;
+        return res.status(400).json({ message: errorMessage });
+    }
+};
+
+const updateAvatarReview = async (req, res) => {
+    try {
+        const review = {
+            avatarURL: req.user.avatarURL,
+        };
+
+        const result = await Reviews.findOneAndUpdate({ owner: req.user.id }, review, { new: true });
+        if (result === null) {
+            return res.status(200).end();
+        }
+
+        return res.status(200).end();
     } catch (error) {
         const errorMessage = error.message;
         return res.status(400).json({ message: errorMessage });
@@ -111,4 +133,5 @@ module.exports = {
     changeReview,
     deleteReview,
     getReview,
+    updateAvatarReview,
 };

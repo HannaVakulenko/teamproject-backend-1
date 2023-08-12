@@ -3,14 +3,13 @@ const { Tasks } = require("../models/index");
 const getTasks = async (req, res, next) => {
     try {
         const results = await Tasks.find({ owner: req.user.id });
-
         const monthStart = new Date(req.body.monthStart);
         const monthEnd = new Date(req.body.monthEnd);
         const result = results.filter((result) => {
-           return monthStart.getTime() <= result.date.getTime() && result.date.getTime() <= monthEnd.getTime();
+            return monthStart.getTime() <= result.date.getTime() && result.date.getTime() <= monthEnd.getTime();
         });
 
-        res.status(200).json(result);
+        res.status(200).json({ tasks: result, avatarURL: req.user.avatarURL });
     } catch (error) {
         return next(error);
     }

@@ -26,8 +26,6 @@ const schema = new mongoose.Schema(
             type: mongoose.Types.ObjectId,
             ref: "user",
         },
-
-        avatarURL: String,
     },
     { versionKey: false, timestamps: true }
 );
