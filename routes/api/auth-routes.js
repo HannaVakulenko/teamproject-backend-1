@@ -18,7 +18,7 @@ router.post(
 router.post("/login", validateBody(schemas.loginSchema), ctrl.login);
 
 // isTokenActive
-// router.get("/user", authenticate, ctrl.getCurrent);
+router.get("/current", authenticate, ctrl.getCurrent);
 
 // Logout
 router.post("/logout", authenticate, ctrl.logout);
