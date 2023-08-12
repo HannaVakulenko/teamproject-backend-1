@@ -80,9 +80,9 @@ const register = async (req, res) => {
 };
 
 const getCurrent = async (req, res) => {
-  const { email, name, isReview } = req.user;
+  const { user } = req;
 
-  res.json({ email, name, isReview });
+  res.json({ user });
 };
 
 const logout = async (req, res) => {
@@ -92,19 +92,31 @@ const logout = async (req, res) => {
   res.json({ message: "Logout success" });
 };
 
+// const updateAvatar = async (req, res) => {
+//   const { _id } = req.user;
+
+//   const imagePath = req.file.path;
+//   console.log(imagePath);
+
+//   const avatarURL = await uploadImage(imagePath);
+
+//   await User.findByIdAndUpdate(_id, { avatarURL });
+
+//   res.json(avatarURL);
+// };
+
 const updateUser = async (req, res) => {
   const { id } = req.user;
 
-  // const imagePath =
-  //   "https://cloudinary-devs.github.io/cld-docs-assets/assets/images/happy_people.jpg";
+  const imagePath = req.file.path;
+  console.log(imagePath);
 
-  // // Upload the image
-  // const publicId = await uploadImage(imagePath);
+  const avatarURL = await uploadImage(imagePath);
 
-  const { name, email, password, isReview } = req.body;
+  const { name, email, password, isReview, skype, phone, birthday } = req.body;
   const result = await User.findByIdAndUpdate(
     id,
-    { name, email, password, isReview },
+    { name, email, password, isReview, skype, phone, birthday, avatarURL },
     { new: true }
   );
 
@@ -114,24 +126,11 @@ const updateUser = async (req, res) => {
   res.json(result);
 };
 
-const updateAvatar = async (req, res) => {
-  const { _id } = req.user;
-
-  const imagePath = req.file.path;
-  console.log(imagePath);
-
-  const avatarURL = await uploadImage(imagePath);
-
-  await User.findByIdAndUpdate(_id, { avatarURL });
-
-  res.json(avatarURL);
-};
-
 module.exports = {
   register: ctrlWrapper(register),
   login: ctrlWrapper(login),
   getCurrent: ctrlWrapper(getCurrent),
   logout: ctrlWrapper(logout),
   updateUser: ctrlWrapper(updateUser),
-  updateAvatar: ctrlWrapper(updateAvatar),
+  // updateAvatar: ctrlWrapper(updateAvatar),
 };

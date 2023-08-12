@@ -16,6 +16,9 @@ const userSchema = new Schema(
     token: { type: String, default: "" },
     isReview: { type: Boolean, default: false },
     avatarURL: { type: String, default: "" },
+    skype: { type: String, default: "" },
+    phone: { type: String, default: "" },
+    birthday: { type: String, default: "" },
   },
   { versionKey: false, timestamps: true }
 );
