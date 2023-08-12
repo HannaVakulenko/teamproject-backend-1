@@ -4,6 +4,9 @@ const cloudinary = require("cloudinary").v2;
 // Return "https" URLs by setting secure: true
 cloudinary.config({
   secure: true,
+  cloud_name: "dici0468p",
+  api_key: "289252817377921",
+  api_secret: "umUKFWmisSTjoP_0MUIPS3s1DqY",
 });
 
 const uploadImage = async (imagePath) => {
@@ -21,7 +24,7 @@ const uploadImage = async (imagePath) => {
     console.log("result", result);
     return result.url;
   } catch (error) {
-    console.error(error);
+    console.error("error", error);
   }
 };
 

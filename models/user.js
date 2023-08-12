@@ -15,7 +15,7 @@ const userSchema = new Schema(
     password: { type: String, minlength: 7, required: true },
     token: { type: String, default: "" },
     isReview: { type: Boolean, default: false },
-    avatarURL: { type: String, required: true },
+    avatarURL: { type: String, default: "" },
   },
   { versionKey: false, timestamps: true }
 );
