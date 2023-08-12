@@ -18,20 +18,26 @@ router.post(
 router.post("/login", validateBody(schemas.loginSchema), ctrl.login);
 
 // isTokenActive
-router.get("/current", authenticate, ctrl.getCurrent);
+// router.get("/user", authenticate, ctrl.getCurrent);
 
 // Logout
 router.post("/logout", authenticate, ctrl.logout);
 
-// Change user data
-router.patch("/update", authenticate, ctrl.updateUser);
-
-// Change user avatar
+// Change user data and isTokenValid
 router.patch(
-  "/avatar",
+  "/account",
   authenticate,
   upload.single("avatar"),
-  ctrl.updateAvatar
+  ctrl.updateUser
 );
+router.get("/account", authenticate, ctrl.getCurrent);
+
+// Change user avatar
+// router.patch(
+//   "/avatar",
+//   authenticate,
+//   upload.single("avatar"),
+//   ctrl.updateAvatar
+// );
 
 module.exports = router;
