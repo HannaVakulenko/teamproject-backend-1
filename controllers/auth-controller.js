@@ -1,9 +1,8 @@
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
+// const Avatar = require("avatar-initials");
 const gravatar = require("gravatar");
-const Avatar = require("avatar-initials");
 const path = require("path");
-const fs = require("fs/promises");
 
 // Require the cloudinary library
 const cloudinary = require("cloudinary").v2;
@@ -15,7 +14,12 @@ cloudinary.config({
 
 const { User } = require("../models/user");
 
-const { HttpError, ctrlWrapper, uploadImage } = require("../helpers");
+const {
+  HttpError,
+  ctrlWrapper,
+  uploadImage,
+  generateAvatar,
+} = require("../helpers");
 
 const { JWT_SECRET } = process.env;
 
@@ -25,7 +29,6 @@ const login = async (req, res) => {
   const { email, password } = req.body;
 
   const user = await User.findOne({ email });
-  console.log(user);
 
   if (!user) {
     throw HttpError(401, "Email or password invalid");
@@ -51,7 +54,7 @@ const login = async (req, res) => {
 };
 
 const register = async (req, res) => {
-  const { email, password } = req.body;
+  const { name, email, password } = req.body;
   const user = await User.findOne({ email });
 
   // const imagePath = req.file.path;
@@ -68,11 +71,10 @@ const register = async (req, res) => {
 
   // временная аватарка
   // const avatarURL = gravatar.url(email);
-  const avatarURL = Avatar.gravatarUrl({
-    email,
-  });
+  generateAvatar(name, 200);
+  const avatarURL = await uploadImage(`./temp/${name}_avatar.png`);
 
-  console.log(avatarURL);
+  // });
 
   await User.create({
     ...req.body,
@@ -101,7 +103,6 @@ const getCurrent = async (req, res) => {
     phone,
     birthday,
   } = req.user;
-  console.log(req.user);
 
   res.json({
     _id,
@@ -141,7 +142,6 @@ const updateUser = async (req, res) => {
   const { id } = req.user;
 
   const imagePath = req.file.path;
-  console.log(imagePath);
 
   const avatarURL = await uploadImage(imagePath);
 
