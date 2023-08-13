@@ -4,6 +4,7 @@ const schema = new mongoose.Schema(
     {
         review: {
             type: String,
+            maxlength: 300,
             required: [true, "Leave your feedback"],
         },
         rating: {
