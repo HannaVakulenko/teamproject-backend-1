@@ -37,7 +37,6 @@ const setReview = async (req, res) => {
         return res.status(201).json({
             review: result.review,
             rating: result.rating,
-            name: result.name,
         });
     } catch (error) {
         const errorMessage = error.message;
@@ -60,8 +59,6 @@ const changeReview = async (req, res, next) => {
         return res.status(200).json({
             review: result.review,
             rating: result.rating,
-            name: result.name,
-            avatarURL: req.user.avatarURL,
         });
     } catch (error) {
         const errorMessage = error.message;
@@ -100,8 +97,6 @@ const getReview = async (req, res, next) => {
         return res.status(200).json({
             review: result.review,
             rating: result.rating,
-            name: result.name,
-            avatarURL: result.avatarURL,
         });
     } catch (error) {
         const errorMessage = error.message;
