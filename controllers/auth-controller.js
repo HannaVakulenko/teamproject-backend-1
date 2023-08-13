@@ -1,6 +1,7 @@
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const gravatar = require("gravatar");
+const Avatar = require("avatar-initials");
 const path = require("path");
 const fs = require("fs/promises");
 
@@ -22,7 +23,9 @@ const avatarsDir = path.join(__dirname, "../", "public", "avatars");
 
 const login = async (req, res) => {
   const { email, password } = req.body;
+
   const user = await User.findOne({ email });
+  console.log(user);
 
   if (!user) {
     throw HttpError(401, "Email or password invalid");
@@ -42,7 +45,7 @@ const login = async (req, res) => {
   res.json({
     name: user.name,
     email,
-    password,
+    password: user.password,
     token,
   });
 };
@@ -62,10 +65,16 @@ const register = async (req, res) => {
   }
 
   const hashPassword = await bcrypt.hash(password, 10);
-  // временная аватарка
-  const avatarURL = gravatar.url(email);
 
-  const newUser = await User.create({
+  // временная аватарка
+  // const avatarURL = gravatar.url(email);
+  const avatarURL = Avatar.gravatarUrl({
+    email,
+  });
+
+  console.log(avatarURL);
+
+  await User.create({
     ...req.body,
     password: hashPassword,
     avatarURL,
