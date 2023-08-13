@@ -131,14 +131,14 @@
     "/api/auth/account": {
       "get": {
         "tags": ["Auth"],
-        "summary": "Get current user",
+        "summary": "Get current user profile info",
         "parameters": [],
         "security": [{ "Bearer": [] }],
         "responses": {
           "200": {
             "description": "Successful operation",
             "content": {
-              "application/json": {
+              "multipart/form-data": {
                 "schema": {
                   "$ref": "#/components/schemas/CurrentUserResponse"
                 }
@@ -152,7 +152,7 @@
       },
       "patch": {
         "tags": ["Auth"],
-        "summary": "User profile update",
+        "summary": "update user profile info",
         "parameters": [],
         "security": [{ "Bearer": [] }],
         "requestBody": {
@@ -179,6 +179,165 @@
           },
           "400": {
             "description": "Bad request (invalid request body)"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Not found"
+          }
+        }
+      }
+    },
+    "/api/auth/current": {
+      "get": {
+        "tags": ["Auth"],
+        "summary": "Get current user",
+        "parameters": [],
+        "security": [{ "Bearer": [] }],
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "multipart/form-data": {
+                "schema": {
+                  "$ref": "#/components/schemas/CurrentUserResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        }
+      }
+    },
+
+    "/api/reviews": {
+      "get": {
+        "tags": ["Reviews"],
+        "summary": "Get all reviews of all users",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "multipart/form-data": {
+                "schema": {
+                  "$ref": "#/components/schemas/ReviewsArrayResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "There are currently no reviews"
+          }
+        }
+      }
+    },
+    "/api/reviews/own": {
+      "get": {
+        "tags": ["Reviews"],
+        "summary": "Get own review to the user",
+        "parameters": [],
+        "security": [{ "Bearer": [] }],
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "multipart/form-data": {
+                "schema": {
+                  "$ref": "#/components/schemas/OwnReviewGetResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "404": {
+            "description": "Not found"
+          }
+        }
+      },
+      "post": {
+        "tags": ["Reviews"],
+        "summary": "Set own review to the user",
+        "parameters": [],
+        "security": [{ "Bearer": [] }],
+        "requestBody": {
+          "description": "Set own user`s review object",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/OwnReviewSetRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OwnReviewSetResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "You already have review"
+          },
+          "404": {
+            "description": "User not found"
+          }
+        }
+      },
+      "patch": {
+        "tags": ["Reviews"],
+        "summary": "Update own user review",
+        "parameters": [],
+        "security": [{ "Bearer": [] }],
+        "requestBody": {
+          "description": "User`s review update object",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/OwnReviewUpdateRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OwnReviewUpdateResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "404": {
+            "description": "Not found"
+          }
+        }
+      },
+      "delete": {
+        "tags": ["Reviews"],
+        "summary": "Delete own user review",
+        "parameters": [],
+        "security": [{ "Bearer": [] }],
+        "responses": {
+          "200": {
+            "description": "review deleted"
           },
           "401": {
             "description": "Unauthorized"
@@ -232,7 +391,7 @@
             "type": "string",
             "description": "User's password",
             "minLength": 7,
-            "example": "qwertonity"
+            "example": "$2a$10$k1/ys98HAHEZMe0E4vGcxeS1k7TW6TZyXDwNbyzDgnPNne9zIb.e6"
           }
         }
       },
@@ -267,7 +426,7 @@
             "type": "string",
             "description": "User's password",
             "minLength": 7,
-            "example": "qwertonity"
+            "example": "$2a$10$k1/ys98HAHEZMe0E4vGcxeS1k7TW6TZyXDwNbyzDgnPNne9zIb.e6"
           },
           "token": {
             "type": "string",
@@ -279,71 +438,61 @@
       "CurrentUserResponse": {
         "type": "object",
         "properties": {
-          "user": {
-            "type": "object",
-            "properties": {
-              "_id": {
-                "type": "string",
-                "description": "User's database id",
-                "example": "64d7869a9244fdaf11cad0af"
-              },
-              "name": {
-                "type": "string",
-                "description": "User's name",
-                "example": "John Dou"
-              },
-              "email": {
-                "type": "string",
-                "description": "User's email",
-                "format": "email"
-              },
-              "password": {
-                "type": "string",
-                "description": "User's password",
-                "minLength": 7,
-                "example": "qwertonity"
-              },
-              "token": {
-                "type": "string",
-                "description": "Access token for authorization",
-                "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY0ZDc4NjlhOTI0NGZkYWYxMWNhZDBhZiIsImlhdCI6MTY5MTg0Nzc3OSwiZXhwIjoxNjkxOTMwNTc5fQ.VZhXjSMaN1l5jz656ClCdKAFQaF4GQ_ak2OqafUk0Kc"
-              },
-              "isReview": {
-                "type": "boolean",
-                "description": "Does the user have a review?"
-              },
-              "avatarURL": {
-                "type": "string",
-                "format": "uri",
-                "description": "User's avatar",
-                "example": "https://res.cloudinary.com/example/image"
-              },
-              "birthday": {
-                "type": "string",
-                "format": "date"
-              },
-              "skype": {
-                "type": "string"
-              },
-              "phone": {
-                "type": "string"
-              }
-            }
+          "_id": {
+            "type": "string",
+            "description": "User's database id",
+            "example": "64d898042763ba4ad83d4d0a"
+          },
+          "name": {
+            "type": "string",
+            "description": "User's name",
+            "example": "Bob Smith"
+          },
+          "email": {
+            "type": "string",
+            "description": "User's email",
+            "format": "email"
+          },
+          "password": {
+            "type": "string",
+            "description": "User's password",
+            "minLength": 7,
+            "example": "$2a$10$k1/ys98HAHEZMe0E4vGcxeS1k7TW6TZyXDwNbyzDgnPNne9zIb.e6"
+          },
+          "token": {
+            "type": "string",
+            "description": "Access token for authorization",
+            "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY0ZDc4NjlhOTI0NGZkYWYxMWNhZDBhZiIsImlhdCI6MTY5MTg0Nzc3OSwiZXhwIjoxNjkxOTMwNTc5fQ.VZhXjSMaN1l5jz656ClCdKAFQaF4GQ_ak2OqafUk0Kc"
+          },
+          "isReview": {
+            "type": "boolean",
+            "description": "Does the user have a review?"
+          },
+          "avatarURL": {
+            "type": "string",
+            "format": "uri",
+            "description": "User's avatar",
+            "example": "https://res.cloudinary.com/example/image"
+          },
+          "skype": {
+            "type": "string"
+          },
+          "phone": {
+            "type": "string"
+          },
+          "birthday": {
+            "type": "string",
+            "format": "date"
           }
         }
       },
       "UserUpdateRequest": {
         "type": "object",
         "properties": {
-          "_id": {
-            "type": "string",
-            "description": "User's database id",
-            "example": "64d7869a9244fdaf11cad0af"
-          },
           "name": {
             "type": "string",
             "description": "User's name",
-            "example": "John Dou"
+            "example": "Bob Smith"
           },
           "email": {
             "type": "string",
@@ -377,56 +526,228 @@
       "UserUpdateResponse": {
         "type": "object",
         "properties": {
-          "user": {
-            "type": "object",
-            "properties": {
-              "_id": {
-                "type": "string",
-                "description": "User's database id",
-                "example": "64d7869a9244fdaf11cad0af"
-              },
-              "name": {
-                "type": "string",
-                "description": "User's name",
-                "example": "John Dou"
-              },
-              "email": {
-                "type": "string",
-                "description": "User's email",
-                "format": "email"
-              },
-              "password": {
-                "type": "string",
-                "description": "User's password",
-                "minLength": 7,
-                "example": "qwertonity"
-              },
-              "token": {
-                "type": "string",
-                "description": "Access token for authorization",
-                "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY0ZDc4NjlhOTI0NGZkYWYxMWNhZDBhZiIsImlhdCI6MTY5MTg0Nzc3OSwiZXhwIjoxNjkxOTMwNTc5fQ.VZhXjSMaN1l5jz656ClCdKAFQaF4GQ_ak2OqafUk0Kc"
-              },
-              "isReview": {
-                "type": "boolean",
-                "description": "Does the user have a review?"
-              },
-              "avatarURL": {
-                "type": "string",
-                "format": "uri",
-                "description": "User's avatar",
-                "example": "https://res.cloudinary.com/example/image"
-              },
-              "birthday": {
-                "type": "string",
-                "format": "date"
-              },
-              "skype": {
-                "type": "string"
-              },
-              "phone": {
-                "type": "string"
+          "_id": {
+            "type": "string",
+            "description": "User's database id",
+            "example": "64d898042763ba4ad83d4d0a"
+          },
+          "name": {
+            "type": "string",
+            "description": "User's name",
+            "example": "Bob Smith"
+          },
+          "email": {
+            "type": "string",
+            "description": "User's email",
+            "format": "email"
+          },
+          "password": {
+            "type": "string",
+            "description": "User's password",
+            "minLength": 7,
+            "example": "$2a$10$k1/ys98HAHEZMe0E4vGcxeS1k7TW6TZyXDwNbyzDgnPNne9zIb.e6"
+          },
+          "token": {
+            "type": "string",
+            "description": "Access token for authorization",
+            "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY0ZDc4NjlhOTI0NGZkYWYxMWNhZDBhZiIsImlhdCI6MTY5MTg0Nzc3OSwiZXhwIjoxNjkxOTMwNTc5fQ.VZhXjSMaN1l5jz656ClCdKAFQaF4GQ_ak2OqafUk0Kc"
+          },
+          "isReview": {
+            "type": "boolean",
+            "description": "Does the user have a review?"
+          },
+          "avatarURL": {
+            "type": "string",
+            "format": "uri",
+            "description": "User's avatar",
+            "example": "https://res.cloudinary.com/example/image"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date"
+          },
+          "birthday": {
+            "type": "string",
+            "format": "date"
+          },
+          "phone": {
+            "type": "string"
+          },
+          "skype": {
+            "type": "string"
+          }
+        }
+      },
+      "ReviewsArrayResponse": {
+        "type": "object",
+        "properties": {
+          "reviews": {
+            "type": "array",
+            "description": "Array of all user's reviews",
+            "items": {
+              "type": "object",
+              "required": ["review", "rating"],
+              "properties": {
+                "_id": {
+                  "type": "string",
+                  "description": "Review database id",
+                  "example": "64d7869a9244fdaf11cad0af"
+                },
+                "review": {
+                  "type": "string",
+                  "description": "User review",
+                  "maxLength": 300,
+                  "example": "This is a very useful web application"
+                },
+                "rating": {
+                  "type": "number",
+                  "description": "User's rating",
+                  "maxLength": 1,
+                  "example": 3
+                },
+                "owner": {
+                  "type": "string",
+                  "description": "User's database id",
+                  "example": "64d7869a9244fdaf11cad0af"
+                },
+                "name": {
+                  "type": "string",
+                  "description": "User's name",
+                  "example": "Bob Smith"
+                },
+                "avatarURL": {
+                  "type": "string",
+                  "format": "uri",
+                  "description": "User's avatar",
+                  "example": "https://res.cloudinary.com/example/image"
+                },
+                "createdAt": {
+                  "type": "string",
+                  "format": "date"
+                },
+                "updatedAt": {
+                  "type": "string",
+                  "format": "date"
+                }
               }
             }
+          },
+          "total": {
+            "type": "number",
+            "description": "Total review`s count",
+            "example": 6
+          }
+        }
+        
+      },
+      "OwnReviewGetResponse": {
+        "type": "object",
+        "properties": {
+          "review": {
+            "type": "string",
+            "description": "User review",
+            "maxLength": 300,
+            "example": "This is a very useful web application"
+          },
+          "rating": {
+            "type": "number",
+            "description": "User's rating",
+            "maxLength": 1,
+            "example": 3
+          },
+          "name": {
+            "type": "string",
+            "description": "User's name",
+            "example": "Bob Smith"
+          },
+          "avatarURL": {
+            "type": "string",
+            "format": "uri",
+            "description": "User's avatar",
+            "example": "https://res.cloudinary.com/example/image"
+          }
+        }
+      },
+      "OwnReviewSetRequest": {
+        "type": "object",
+        "required": ["review", "rating"],
+        "properties": {
+          "review": {
+            "type": "string",
+            "description": "User review",
+            "maxLength": 300,
+            "example": "This is a very useful web application"
+          },
+          "rating": {
+            "type": "number",
+            "description": "User's rating",
+            "maxLength": 1,
+            "example": 4
+          }
+        }
+      },
+      "OwnReviewSetResponse": {
+        "type": "object",
+        "properties": {
+          "review": {
+            "type": "string",
+            "description": "User review",
+            "maxLength": 300,
+            "example": "This is a very useful web application"
+          },
+          "rating": {
+            "type": "number",
+            "description": "User's rating",
+            "maxLength": 1,
+            "example": 4
+          },
+          "name": {
+            "type": "string",
+            "description": "User's name",
+            "example": "Bob Smith"
+          }
+        }
+      },
+      "OwnReviewUpdateRequest": {
+        "type": "object",
+        "properties": {
+          "review": {
+            "type": "string",
+            "description": "User review",
+            "maxLength": 300,
+            "example": "This is a very useful web application"
+          },
+          "rating": {
+            "type": "number",
+            "description": "User's rating",
+            "maxLength": 1,
+            "example": 5
+          }
+        }
+      },
+      "OwnReviewUpdateResponse": {
+        "type": "object",
+        "properties": {
+          "review": {
+            "type": "string",
+            "description": "User review",
+            "maxLength": 300,
+            "example": "This is a very useful web application"
+          },
+          "rating": {
+            "type": "number",
+            "description": "User's rating",
+            "maxLength": 1,
+            "example": 5
+          },
+          "name": {
+            "type": "string",
+            "description": "User's name",
+            "example": "Bob Smith"
           }
         }
       }
