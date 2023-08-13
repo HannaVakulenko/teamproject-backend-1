@@ -30,7 +30,7 @@ router.patch(
   upload.single("avatar"),
   ctrl.updateUser
 );
-router.get("/account", authenticate, ctrl.getCurrent);
+router.get("/account", authenticate, ctrl.getUser);
 
 // Change user avatar
 // router.patch(

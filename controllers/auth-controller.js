@@ -91,12 +91,19 @@ const register = async (req, res) => {
 };
 
 const getCurrent = async (req, res) => {
+  const { token } = req.user;
+
+  res.json({
+    token,
+  });
+};
+
+const getUser = async (req, res) => {
   const {
     _id,
     name,
     email,
     password,
-    token,
     isReview,
     avatarURL,
     skype,
@@ -109,7 +116,6 @@ const getCurrent = async (req, res) => {
     name,
     email,
     password,
-    token,
     isReview,
     avatarURL,
     skype,
@@ -164,5 +170,6 @@ module.exports = {
   getCurrent: ctrlWrapper(getCurrent),
   logout: ctrlWrapper(logout),
   updateUser: ctrlWrapper(updateUser),
+  getUser: ctrlWrapper(getUser),
   // updateAvatar: ctrlWrapper(updateAvatar),
 };
