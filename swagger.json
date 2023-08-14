@@ -47,16 +47,6 @@
           }
         },
         "responses": {
-          "200": {
-            "description": "Successful operation",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/LoginResponse"
-                }
-              }
-            }
-          },
           "201": {
             "description": "Successful operation",
             "content": {
@@ -140,7 +130,7 @@
             "content": {
               "multipart/form-data": {
                 "schema": {
-                  "$ref": "#/components/schemas/CurrentUserResponse"
+                  "$ref": "#/components/schemas/UserGetInfoResponse"
                 }
               }
             }
@@ -235,6 +225,7 @@
         }
       }
     },
+
     "/api/reviews/own": {
       "get": {
         "tags": ["Reviews"],
@@ -254,6 +245,9 @@
           },
           "400": {
             "description": "Bad Request"
+          },
+          "401": {
+            "description": "Unauthorized"
           },
           "404": {
             "description": "Not found"
@@ -288,7 +282,17 @@
             }
           },
           "400": {
-            "description": "You already have review"
+            "description": "You already have review",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
           },
           "404": {
             "description": "User not found"
@@ -325,6 +329,9 @@
           "400": {
             "description": "Bad Request"
           },
+          "401": {
+            "description": "Unauthorized"
+          },
           "404": {
             "description": "Not found"
           }
@@ -347,10 +354,162 @@
           }
         }
       }
+    },
+
+ 
+    "/api/tasks": {
+      "get": {
+        "tags": ["Tasks"],
+        "summary": "Get all user`s tasks per month",
+        "parameters": [],
+        "security": [{ "Bearer": [] }],
+        "requestBody": {
+          "description": "Calendar period object",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TaskArrayGetMonthRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "multipart/form-data": {
+                "schema": {
+                  "$ref": "#/components/schemas/TaskArrayGetMonthResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Not found"
+          }
+        }
+      },
+      "post": {
+        "tags": ["Tasks"],
+        "summary": "Set user`s task",
+        "parameters": [],
+        "security": [{ "Bearer": [] }],
+        "requestBody": {
+          "description": "Set user`s task object",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TaskSetRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TaskSetResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Set user`s task",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "User not found"
+          }
+        }
+      }
+    },
+
+    "/api/tasks/{id}": {
+      "patch": {
+        "tags": ["Tasks"],
+        "summary": "Update task",
+        "parameters": [],
+        "security": [{ "Bearer": [] }],
+        "requestBody": {
+          "description": "Task update object",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TaskUpdateRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TaskUpdateResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Not found"
+          }
+        }
+      },
+      "delete": {
+        "tags": ["Tasks"],
+        "summary": "Delete task",
+        "parameters": [],
+        "security": [{ "Bearer": [] }],
+        "responses": {
+          "200": {
+            "description": "task deleted"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Not found"
+          }
+        }
+      }
     }
   },
   "components": {
     "schemas": {
+      "ErrorResponse": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string",
+            "description": "Error description",
+            "example": "Here is the error message!"
+          }
+        }
+      },
       "RegistrationRequest": {
         "type": "object",
         "required": ["name", "email", "password"],
@@ -393,6 +552,11 @@
             "minLength": 7,
             "example": "$2a$10$k1/ys98HAHEZMe0E4vGcxeS1k7TW6TZyXDwNbyzDgnPNne9zIb.e6"
           }
+        },
+        "token": {
+          "type": "string",
+          "description": "Access token for authorization",
+          "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY0ZDYwMTRiMzBmZTlhODA2NDI5ZDFmNCIsImlhdCI6MTY5MTc0NjYzNSwiZXhwIjoxNjkxODI5NDM1fQ.dAtkjqFYB_I4r6vBHWY6d2A2kSuDpkRle9wXfG7mw1A"
         }
       },
       "LoginRequest": {
@@ -416,6 +580,11 @@
       "LoginResponse": {
         "type": "object",
         "properties": {
+          "name": {
+            "type": "string",
+            "description": "User's name",
+            "example": "Bob Smith"
+          },
           "email": {
             "type": "string",
             "description": "User's email",
@@ -436,6 +605,16 @@
         }
       },
       "CurrentUserResponse": {
+        "type": "object",
+        "properties": {
+          "token": {
+            "type": "string",
+            "description": "Access token for authorization",
+            "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY0ZDYwMTRiMzBmZTlhODA2NDI5ZDFmNCIsImlhdCI6MTY5MTc0NjYzNSwiZXhwIjoxNjkxODI5NDM1fQ.dAtkjqFYB_I4r6vBHWY6d2A2kSuDpkRle9wXfG7mw1A"
+          }
+        }
+      },
+      "UserGetInfoResponse": {
         "type": "object",
         "properties": {
           "_id": {
@@ -459,11 +638,6 @@
             "minLength": 7,
             "example": "$2a$10$k1/ys98HAHEZMe0E4vGcxeS1k7TW6TZyXDwNbyzDgnPNne9zIb.e6"
           },
-          "token": {
-            "type": "string",
-            "description": "Access token for authorization",
-            "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY0ZDc4NjlhOTI0NGZkYWYxMWNhZDBhZiIsImlhdCI6MTY5MTg0Nzc3OSwiZXhwIjoxNjkxOTMwNTc5fQ.VZhXjSMaN1l5jz656ClCdKAFQaF4GQ_ak2OqafUk0Kc"
-          },
           "isReview": {
             "type": "boolean",
             "description": "Does the user have a review?"
@@ -472,7 +646,7 @@
             "type": "string",
             "format": "uri",
             "description": "User's avatar",
-            "example": "https://res.cloudinary.com/example/image"
+            "example": "http://res.cloudinary.com/dici0468p/image/upload/v1692016055/Luka_avatar.png"
           },
           "skype": {
             "type": "string"
@@ -505,21 +679,25 @@
             "minLength": 7,
             "example": "qwertonity"
           },
+          "isReview": {
+            "type": "boolean",
+            "description": "Does the user have a review?"
+          },
           "avatarURL": {
             "type": "string",
             "format": "uri",
             "description": "User's avatar",
-            "example": "https://res.cloudinary.com/example/image"
-          },
-          "birthday": {
-            "type": "string",
-            "format": "date"
+            "example": "http://res.cloudinary.com/dici0468p/image/upload/v1692017234/404-mob-1x.webp"
           },
           "skype": {
             "type": "string"
           },
           "phone": {
             "type": "string"
+          },
+          "birthday": {
+            "type": "string",
+            "format": "date"
           }
         }
       },
@@ -547,11 +725,6 @@
             "minLength": 7,
             "example": "$2a$10$k1/ys98HAHEZMe0E4vGcxeS1k7TW6TZyXDwNbyzDgnPNne9zIb.e6"
           },
-          "token": {
-            "type": "string",
-            "description": "Access token for authorization",
-            "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY0ZDc4NjlhOTI0NGZkYWYxMWNhZDBhZiIsImlhdCI6MTY5MTg0Nzc3OSwiZXhwIjoxNjkxOTMwNTc5fQ.VZhXjSMaN1l5jz656ClCdKAFQaF4GQ_ak2OqafUk0Kc"
-          },
           "isReview": {
             "type": "boolean",
             "description": "Does the user have a review?"
@@ -560,7 +733,17 @@
             "type": "string",
             "format": "uri",
             "description": "User's avatar",
-            "example": "https://res.cloudinary.com/example/image"
+            "example": "http://res.cloudinary.com/dici0468p/image/upload/v1692016055/Luka_avatar.png"
+          },
+          "skype": {
+            "type": "string"
+          },
+          "phone": {
+            "type": "string"
+          },
+          "birthday": {
+            "type": "string",
+            "format": "date"
           },
           "createdAt": {
             "type": "string",
@@ -569,16 +752,6 @@
           "updatedAt": {
             "type": "string",
             "format": "date"
-          },
-          "birthday": {
-            "type": "string",
-            "format": "date"
-          },
-          "phone": {
-            "type": "string"
-          },
-          "skype": {
-            "type": "string"
           }
         }
       },
@@ -623,7 +796,7 @@
                   "type": "string",
                   "format": "uri",
                   "description": "User's avatar",
-                  "example": "https://res.cloudinary.com/example/image"
+                  "example": "http://res.cloudinary.com/dici0468p/image/upload/v1692016055/Luka_avatar.png"
                 },
                 "createdAt": {
                   "type": "string",
@@ -642,7 +815,6 @@
             "example": 6
           }
         }
-        
       },
       "OwnReviewGetResponse": {
         "type": "object",
@@ -668,7 +840,7 @@
             "type": "string",
             "format": "uri",
             "description": "User's avatar",
-            "example": "https://res.cloudinary.com/example/image"
+            "example": "http://res.cloudinary.com/dici0468p/image/upload/v1692016055/Luka_avatar.png"
           }
         }
       },
@@ -704,11 +876,6 @@
             "description": "User's rating",
             "maxLength": 1,
             "example": 4
-          },
-          "name": {
-            "type": "string",
-            "description": "User's name",
-            "example": "Bob Smith"
           }
         }
       },
@@ -743,11 +910,298 @@
             "description": "User's rating",
             "maxLength": 1,
             "example": 5
-          },
-          "name": {
+          }
+        }
+      },
+      "TaskArrayGetMonthRequest": {
+        "type": "object",
+        "properties": {
+          "monthStart": {
             "type": "string",
-            "description": "User's name",
-            "example": "Bob Smith"
+            "format": "date",
+            "example": "2023-08-01",
+            "description": "The First day of month"
+          },
+          "monthEnd": {
+            "type": "string",
+            "format": "date",
+            "example": "2023-08-31",
+            "description": "The Last day of month"
+          }
+        }
+      },
+      "TaskArrayGetMonthResponse": {
+        "type": "object",
+        "properties": {
+          "tasks": {
+            "type": "array",
+            "description": "Array of all user's tasks per month",
+            "items": {
+              "type": "object",
+              "properties": {
+                "_id": {
+                  "type": "string",
+                  "description": "Task database id",
+                  "example": "64d7869a9244fdaf11cad0af"
+                },
+                "title": {
+                  "type": "string",
+                  "description": "Task title",
+                  "maxLength": 250,
+                  "example": "To do something"
+                },
+                "priority": {
+                  "type": "string",
+                  "enum": ["low", "medium", "high"],
+                  "default": "low",
+                  "description": "Task priority"
+                },
+                "category": {
+                  "type": "string",
+                  "enum": ["To do", "In progress", "Done"],
+                  "default": "To do",
+                  "description": "Task category"
+                },
+                "start": {
+                  "type": "string",
+                  "format": "time",
+                  "example": "09:30",
+                  "description": "Start time"
+                },
+                "end": {
+                  "type": "string",
+                  "format": "time",
+                  "example": "18:30",
+                  "description": "Finish time"
+                },
+                "date": {
+                  "type": "string",
+                  "format": "date",
+                  "example": "2023-08-22",
+                  "description": "When tasks are performed"
+                },
+                "owner": {
+                  "type": "string",
+                  "description": "User's database id",
+                  "example": "64d7869a9244fdaf11cad0af"
+                },
+                "createdAt": {
+                  "type": "string",
+                  "format": "date"
+                },
+                "updatedAt": {
+                  "type": "string",
+                  "format": "date"
+                }
+              }
+            }
+          },
+          "avatarURL": {
+            "type": "string",
+            "format": "uri",
+            "description": "User's avatar",
+            "example": "http://res.cloudinary.com/dici0468p/image/upload/v1692016055/Luka_avatar.png"
+          }
+        }
+      },
+      "TaskSetRequest": {
+        "type": "object",
+        "required": ["title", "priority", "category", "start", "end"],
+        "properties": {
+          "_id": {
+            "type": "string",
+            "description": "Task database id",
+            "example": "64d7869a9244fdaf11cad0af"
+          },
+          "title": {
+            "type": "string",
+            "description": "Task title",
+            "maxLength": 250,
+            "example": "To do something"
+          },
+          "priority": {
+            "type": "string",
+            "enum": ["low", "medium", "high"],
+            "default": "low",
+            "description": "Task priority"
+          },
+          "category": {
+            "type": "string",
+            "enum": ["To do", "In progress", "Done"],
+            "default": "To do",
+            "description": "Task category"
+          },
+          "start": {
+            "type": "string",
+            "format": "time",
+            "example": "09:30",
+            "description": "Start time"
+          },
+          "end": {
+            "type": "string",
+            "format": "time",
+            "example": "18:30",
+            "description": "Finish time"
+          },
+          "date": {
+            "type": "string",
+            "format": "date",
+            "example": "2023-08-22",
+            "description": "When tasks are performed"
+          }
+        }
+      },
+      "TaskSetResponse": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string",
+            "description": "Task title",
+            "maxLength": 250,
+            "example": "To do something"
+          },
+          "priority": {
+            "type": "string",
+            "enum": ["low", "medium", "high"],
+            "default": "low",
+            "description": "Task priority"
+          },
+          "category": {
+            "type": "string",
+            "enum": ["To do", "In progress", "Done"],
+            "default": "To do",
+            "description": "Task category"
+          },
+          "start": {
+            "type": "string",
+            "format": "time",
+            "example": "09:30",
+            "description": "Start time"
+          },
+          "end": {
+            "type": "string",
+            "format": "time",
+            "example": "18:30",
+            "description": "Finish time"
+          },
+          "date": {
+            "type": "string",
+            "format": "date",
+            "example": "2023-08-22",
+            "description": "When tasks are performed"
+          },
+          "owner": {
+            "type": "string",
+            "description": "User's database id",
+            "example": "64d7869a9244fdaf11cad0af"
+          },
+          "_id": {
+            "type": "string",
+            "description": "Task database id",
+            "example": "64d7869a9244fdaf11cad0af"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date"
+          }
+        }
+      },
+      "TaskUpdateRequest": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string",
+            "description": "Task title",
+            "maxLength": 250,
+            "example": "To do something"
+          },
+          "priority": {
+            "type": "string",
+            "enum": ["low", "medium", "high"],
+            "default": "low",
+            "description": "Task priority"
+          },
+          "category": {
+            "type": "string",
+            "enum": ["To do", "In progress", "Done"],
+            "default": "To do",
+            "description": "Task category"
+          },
+          "start": {
+            "type": "string",
+            "format": "time",
+            "example": "09:30",
+            "description": "Start time"
+          },
+          "end": {
+            "type": "string",
+            "format": "time",
+            "example": "18:30",
+            "description": "Finish time"
+          },
+          "date": {
+            "type": "string",
+            "format": "date",
+            "example": "2023-08-22",
+            "description": "When tasks are performed"
+          }
+        }
+      },
+      "TaskUpdateResponse": {
+        "type": "object",
+        "properties": {
+          "_id": {
+            "type": "string",
+            "description": "Task database id",
+            "example": "64d7869a9244fdaf11cad0af"
+          },
+          "title": {
+            "type": "string",
+            "description": "Task title",
+            "maxLength": 250,
+            "example": "To do something"
+          },
+          "priority": {
+            "type": "string",
+            "enum": ["low", "medium", "high"],
+            "default": "low",
+            "description": "Task priority"
+          },
+          "category": {
+            "type": "string",
+            "enum": ["To do", "In progress", "Done"],
+            "default": "To do",
+            "description": "Task category"
+          },
+          "start": {
+            "type": "string",
+            "format": "time",
+            "example": "09:30",
+            "description": "Start time"
+          },
+          "end": {
+            "type": "string",
+            "format": "time",
+            "example": "18:30",
+            "description": "Finish time"
+          },
+          "date": {
+            "type": "string",
+            "format": "date",
+            "example": "2023-08-22",
+            "description": "When tasks are performed"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date"
           }
         }
       }
