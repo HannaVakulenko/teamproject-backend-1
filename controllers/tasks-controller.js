@@ -1,81 +1,71 @@
 const { Tasks } = require("../models/index");
+const { HttpError, ctrlWrapper } = require("../helpers");
 
-const getTasks = async (req, res, next) => {
-    try {
-        const results = await Tasks.find({ owner: req.user.id });
-        const monthStart = new Date(req.body.monthStart);
-        const monthEnd = new Date(req.body.monthEnd);
-        const result = results.filter((result) => {
-            return monthStart.getTime() <= result.date.getTime() && result.date.getTime() <= monthEnd.getTime();
-        });
+//Get tasks for month
 
-        res.status(200).json({ tasks: result, avatarURL: req.user.avatarURL });
-    } catch (error) {
-        return next(error);
-    }
+const getTasks = async (req, res) => {
+    const results = await Tasks.find({ owner: req.user.id });
+    const monthStart = new Date(req.body.monthStart);
+    const monthEnd = new Date(req.body.monthEnd);
+    const result = results.filter((result) => {
+        return monthStart.getTime() <= result.date.getTime() && result.date.getTime() <= monthEnd.getTime();
+    });
+
+    res.status(200).json({ tasks: result, avatarURL: req.user.avatarURL });
 };
+
+//Post task
 
 const setTask = async (req, res) => {
-    try {
-        const task = {
-            title: req.body.title,
-            priority: req.body.priority,
-            category: req.body.category,
-            start: req.body.start,
-            end: req.body.end,
-            date: req.body.date,
-            owner: req.user.id,
-        };
+    const task = {
+        title: req.body.title,
+        priority: req.body.priority,
+        category: req.body.category,
+        start: req.body.start,
+        end: req.body.end,
+        date: req.body.date,
+        owner: req.user.id,
+    };
 
-        const result = await Tasks.create(task);
-        return res.status(201).json(result);
-    } catch (error) {
-        const errorMessage = error.message;
-        return res.status(400).json({ message: errorMessage });
-    }
+    const result = await Tasks.create(task);
+    return res.status(201).json(result);
 };
 
-const changeTask = async (req, res, next) => {
-    try {
-        const task = {
-            title: req.body.title,
-            priority: req.body.priority,
-            category: req.body.category,
-            start: req.body.start,
-            end: req.body.end,
-            date: req.body.date,
-            owner: req.user.id,
-        };
-        console.log(task);
+//Update task by ID
 
-        const result = await Tasks.findOneAndUpdate({ _id: req.params.id, owner: req.user.id }, task, { new: true });
-        if (result === null) {
-            return res.status(404).json({ message: "Not found" });
-        }
+const changeTask = async (req, res) => {
+    const task = {
+        title: req.body.title,
+        priority: req.body.priority,
+        category: req.body.category,
+        start: req.body.start,
+        end: req.body.end,
+        date: req.body.date,
+        owner: req.user.id,
+    };
 
-        return res.status(200).json(result);
-    } catch (error) {
-        const errorMessage = error.message;
-        return res.status(400).json({ message: errorMessage });
+    const result = await Tasks.findOneAndUpdate({ _id: req.params.id, owner: req.user.id }, task, { new: true });
+    if (result === null) {
+        throw HttpError(404, "Not found");
     }
+
+    return res.status(200).json(result);
 };
 
-const deleteTask = async (req, res, next) => {
-    try {
-        const result = await Tasks.findOneAndDelete({ _id: req.params.id }, { owner: req.user.id });
-        if (result === null) {
-            return res.status(404).json({ message: "Not found" });
-        }
+//Delete task by ID
 
-        return res.status(200).json({ message: "task deleted" });
-    } catch (error) {
-        return next(error);
+const deleteTask = async (req, res) => {
+    const result = await Tasks.findOneAndDelete({ _id: req.params.id }, { owner: req.user.id });
+    if (result === null) {
+        throw HttpError(404, "Not found");
     }
+
+    return res.status(200).json({ message: "task deleted" });
 };
 
 module.exports = {
-    getTasks,
-    setTask,
-    changeTask,
-    deleteTask,
+    getTasks: ctrlWrapper(getTasks),
+    setTask: ctrlWrapper(setTask),
+    changeTask: ctrlWrapper(changeTask),
+    deleteTask: ctrlWrapper(deleteTask),
 };

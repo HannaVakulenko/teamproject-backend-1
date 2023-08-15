@@ -27,7 +27,7 @@ const schema = new mongoose.Schema(
             ref: "user",
         },
     },
-    { versionKey: false, timestamps: true }
+    { versionKey: false }
 );
 
 module.exports = mongoose.model("tasks", schema);

@@ -1,98 +1,87 @@
-const { Reviews } = require("../models/index");
-const { User } = require("../models/user");
+const { Reviews, User } = require("../models/index");
+const { HttpError, ctrlWrapper } = require("../helpers");
 
-const getAllReviews = async (req, res, next) => {
-    try {
-        const result = await Reviews.find();
-        const sortResult = result.sort(function (a, b) {
-            return b.updatedAt.getTime() - a.updatedAt.getTime();
-        });
-        if (req.query.page === undefined) {
-            return res.status(200).json({ reviews: sortResult, total: sortResult.length });
-        }
-        return res.status(200).json({ reviews: sortResult.slice((req.query.page - 1) * req.query.limit, req.query.page * req.query.limit), total: sortResult.length });
-    } catch (error) {
-        return next(error);
+//Get all reviews
+
+const getAllReviews = async (req, res) => {
+    const result = await Reviews.find();
+    const sortResult = result.sort(function (a, b) {
+        return b.updatedAt.getTime() - a.updatedAt.getTime();
+    });
+    if (req.query.page === undefined) {
+        return res.status(200).json({ reviews: sortResult, total: sortResult.length });
     }
+    return res.status(200).json({ reviews: sortResult.slice((req.query.page - 1) * req.query.limit, req.query.page * req.query.limit), total: sortResult.length });
 };
+
+//Post owner's review
 
 const setReview = async (req, res) => {
-    try {
-        const review = {
-            review: req.body.review,
-            rating: req.body.rating,
-            owner: req.user.id,
-            name: req.user.name,
-            avatarURL: req.user.avatarURL,
-        };
-        const userReview = await User.findOne({ _id: req.user.id });
-        if (userReview.isReview) {
-            return res.status(400).json({ message: "You already have review" });
-        }
-        const result = await Reviews.create(review);
-        const user = await User.findOneAndUpdate({ _id: req.user.id }, { isReview: true }, { new: true });
-        if (user === null) {
-            return res.status(404).json({ message: "User not found" });
-        }
-        return res.status(201).json({ reviews: [{ review: result.review, rating: result.rating }] });
-    } catch (error) {
-        const errorMessage = error.message;
-        return res.status(400).json({ message: errorMessage });
+    const review = {
+        review: req.body.review,
+        rating: req.body.rating,
+        owner: req.user.id,
+        name: req.user.name,
+        avatarURL: req.user.avatarURL,
+    };
+    const userReview = await User.findOne({ _id: req.user.id });
+    if (userReview.isReview) {
+        throw HttpError(400, "You already have review");
     }
+    const result = await Reviews.create(review);
+    const user = await User.findOneAndUpdate({ _id: req.user.id }, { isReview: true }, { new: true });
+    if (user === null) {
+        throw HttpError(404, "User not found");
+    }
+    return res.status(201).json({ reviews: [{ review: result.review, rating: result.rating }] });
 };
 
-const changeReview = async (req, res, next) => {
-    try {
-        const review = {
-            review: req.body.review,
-            rating: req.body.rating,
-        };
+//Update owner's review
 
-        const result = await Reviews.findOneAndUpdate({ owner: req.user.id }, review, { new: true });
-        if (result === null) {
-            return res.status(404).json({ message: "Not found" });
-        }
+const changeReview = async (req, res) => {
+    const review = {
+        review: req.body.review,
+        rating: req.body.rating,
+    };
 
-        return res.status(200).json({ reviews: [{ review: result.review, rating: result.rating }] });
-    } catch (error) {
-        const errorMessage = error.message;
-        return res.status(400).json({ message: errorMessage });
+    const result = await Reviews.findOneAndUpdate({ owner: req.user.id }, review, { new: true });
+    if (result === null) {
+        throw HttpError(404, "Not found");
     }
+
+    return res.status(200).json({ reviews: [{ review: result.review, rating: result.rating }] });
 };
 
-const deleteReview = async (req, res, next) => {
-    try {
-        const result = await Reviews.findOneAndDelete({ owner: req.user.id });
-        if (result === null) {
-            return res.status(404).json({ message: "Not found" });
-        }
-        const user = await User.findOneAndUpdate({ _id: req.user.id }, { isReview: false }, { new: true });
-        if (user === null) {
-            return res.status(404).json({ message: "User not found" });
-        }
-        return res.status(200).json({ message: "review deleted" });
-    } catch (error) {
-        return next(error);
+//Delete owner's review
+
+const deleteReview = async (req, res) => {
+    const result = await Reviews.findOneAndDelete({ owner: req.user.id });
+    if (result === null) {
+        throw HttpError(404, "Not found");
     }
+    const user = await User.findOneAndUpdate({ _id: req.user.id }, { isReview: false }, { new: true });
+    if (user === null) {
+        throw HttpError(404, "User not found");
+    }
+    return res.status(200).json({ message: "review deleted" });
 };
 
-const getReview = async (req, res, next) => {
-    try {
-        const user = await User.findOne({ _id: req.user.id });
-        if (!user.isReview) {
-            return res.status(200).json({ reviews: [] });
-        }
-        updateAvatarReview(req, res);
-        const result = await Reviews.findOne({ owner: req.user.id });
-        if (result === null) {
-            return res.status(404).json({ message: "Not found" });
-        }
-        return res.status(200).json({ reviews: [{ review: result.review, rating: result.rating }] });
-    } catch (error) {
-        const errorMessage = error.message;
-        return res.status(400).json({ message: errorMessage });
+//Get owner's review
+
+const getReview = async (req, res) => {
+    const user = await User.findOne({ _id: req.user.id });
+    if (!user.isReview) {
+        return res.status(200).json({ reviews: [] });
     }
+    updateAvatarReview(req, res);
+    const result = await Reviews.findOne({ owner: req.user.id });
+    if (result === null) {
+        throw HttpError(404, "Not found");
+    }
+    return res.status(200).json({ reviews: [{ review: result.review, rating: result.rating }] });
 };
+
+//Update all avatars in all reviews
 
 const updateAvatarReview = async (req, res) => {
     try {
@@ -113,10 +102,9 @@ const updateAvatarReview = async (req, res) => {
 };
 
 module.exports = {
-    getAllReviews,
-    setReview,
-    changeReview,
-    deleteReview,
-    getReview,
-    updateAvatarReview,
+    getAllReviews: ctrlWrapper(getAllReviews),
+    setReview: ctrlWrapper(setReview),
+    changeReview: ctrlWrapper(changeReview),
+    deleteReview: ctrlWrapper(deleteReview),
+    getReview: ctrlWrapper(getReview),
 };
