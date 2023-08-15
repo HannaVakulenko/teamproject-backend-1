@@ -15,7 +15,7 @@ const { HttpError, ctrlWrapper, uploadImage, generateAvatar } = require("../help
 
 const { JWT_SECRET } = process.env;
 
-//Login controller
+// Login controller
 
 const login = async (req, res) => {
     const { email, password } = req.body;
@@ -44,7 +44,7 @@ const login = async (req, res) => {
     });
 };
 
-//Register controller
+// Register controller
 
 const register = async (req, res) => {
     const { name, email, password } = req.body;
@@ -69,11 +69,11 @@ const register = async (req, res) => {
         avatarURL,
     });
 
-    //Calling the login controller
+    // Calling the login controller
     login(req, res);
 };
 
-//Getting the current token
+// Getting the current token
 
 const getCurrent = async (req, res) => {
     const { token } = req.user;
@@ -83,7 +83,7 @@ const getCurrent = async (req, res) => {
     });
 };
 
-//Getting user data
+// Getting user data
 
 const getUser = async (req, res) => {
     const { _id, name, email, password, isReview, avatarURL, skype, phone, birthday } = req.user;
@@ -101,7 +101,7 @@ const getUser = async (req, res) => {
     });
 };
 
-//Logout controller
+// Logout controller
 
 const logout = async (req, res) => {
     const { _id } = req.user;
@@ -110,7 +110,7 @@ const logout = async (req, res) => {
     res.json({ message: "Logout success" });
 };
 
-//User data update
+// User data update
 
 const updateUser = async (req, res) => {
     const { id } = req.user;

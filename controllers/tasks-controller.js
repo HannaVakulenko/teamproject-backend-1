@@ -1,7 +1,7 @@
 const { Tasks } = require("../models/index");
 const { HttpError, ctrlWrapper } = require("../helpers");
 
-//Get tasks for month
+// Get tasks for month
 
 const getTasks = async (req, res) => {
     const results = await Tasks.find({ owner: req.user.id });
@@ -14,7 +14,7 @@ const getTasks = async (req, res) => {
     res.status(200).json({ tasks: result, avatarURL: req.user.avatarURL });
 };
 
-//Post task
+// Post task
 
 const setTask = async (req, res) => {
     const task = {
@@ -31,7 +31,7 @@ const setTask = async (req, res) => {
     return res.status(201).json(result);
 };
 
-//Update task by ID
+// Update task by ID
 
 const changeTask = async (req, res) => {
     const task = {
@@ -52,7 +52,7 @@ const changeTask = async (req, res) => {
     return res.status(200).json(result);
 };
 
-//Delete task by ID
+// Delete task by ID
 
 const deleteTask = async (req, res) => {
     const result = await Tasks.findOneAndDelete({ _id: req.params.id }, { owner: req.user.id });
