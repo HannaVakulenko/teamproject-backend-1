@@ -1,4 +1,4 @@
-const { createCanvas, loadImage } = require("canvas");
+const { createCanvas } = require("canvas");
 const fs = require("fs");
 
 const generateAvatar = (name, size) => {
@@ -24,7 +24,7 @@ const generateAvatar = (name, size) => {
 
   stream.pipe(out);
 
-  out.on("finish", () => console.log(outputPath));
+  out.on("finish",()=>{});
 };
 
 module.exports = generateAvatar;
