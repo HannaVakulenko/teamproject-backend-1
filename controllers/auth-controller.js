@@ -40,7 +40,6 @@ const login = async (req, res) => {
     res.json({
         name: user.name,
         email,
-        password: user.password,
         token,
     });
 };
@@ -122,7 +121,7 @@ const updateUser = async (req, res) => {
     if (!result) {
         throw HttpError(404, "Not found");
     }
-    res.json(result);
+    res.json({ name: result.name, email: result.email, skype: result.skype, phone: result.phone, birthday: result.birthday, avatarURL: result.avatarURL });
 };
 
 module.exports = {
