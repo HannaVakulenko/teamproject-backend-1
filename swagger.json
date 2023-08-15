@@ -819,28 +819,27 @@
       "OwnReviewGetResponse": {
         "type": "object",
         "properties": {
-          "review": {
-            "type": "string",
-            "description": "User review",
-            "maxLength": 300,
-            "example": "This is a very useful web application"
-          },
-          "rating": {
-            "type": "number",
-            "description": "User's rating",
-            "maxLength": 1,
-            "example": 3
-          },
-          "name": {
-            "type": "string",
-            "description": "User's name",
-            "example": "Bob Smith"
-          },
-          "avatarURL": {
-            "type": "string",
-            "format": "uri",
-            "description": "User's avatar",
-            "example": "http://res.cloudinary.com/dici0468p/image/upload/v1692016055/Luka_avatar.png"
+          "reviews": {
+            "type": "array",
+            "description": "Array of all user's reviews",
+            "items": {
+              "type": "object",
+              "required": ["review", "rating"],
+              "properties": {
+                "review": {
+                  "type": "string",
+                  "description": "User review",
+                  "maxLength": 300,
+                  "example": "This is a very useful web application"
+                },
+                "rating": {
+                  "type": "number",
+                  "description": "User's rating",
+                  "maxLength": 1,
+                  "example": 3
+                }
+              }
+            }
           }
         }
       },
@@ -865,17 +864,27 @@
       "OwnReviewSetResponse": {
         "type": "object",
         "properties": {
-          "review": {
-            "type": "string",
-            "description": "User review",
-            "maxLength": 300,
-            "example": "This is a very useful web application"
-          },
-          "rating": {
-            "type": "number",
-            "description": "User's rating",
-            "maxLength": 1,
-            "example": 4
+          "reviews": {
+            "type": "array",
+            "description": "Array of all user's reviews",
+            "items": {
+              "type": "object",
+              "required": ["review", "rating"],
+              "properties": {
+                "review": {
+                  "type": "string",
+                  "description": "User review",
+                  "maxLength": 300,
+                  "example": "This is a very useful web application"
+                },
+                "rating": {
+                  "type": "number",
+                  "description": "User's rating",
+                  "maxLength": 1,
+                  "example": 3
+                }
+              }
+            }
           }
         }
       },
@@ -899,17 +908,27 @@
       "OwnReviewUpdateResponse": {
         "type": "object",
         "properties": {
-          "review": {
-            "type": "string",
-            "description": "User review",
-            "maxLength": 300,
-            "example": "This is a very useful web application"
-          },
-          "rating": {
-            "type": "number",
-            "description": "User's rating",
-            "maxLength": 1,
-            "example": 5
+          "reviews": {
+            "type": "array",
+            "description": "Array of all user's reviews",
+            "items": {
+              "type": "object",
+              "required": ["review", "rating"],
+              "properties": {
+                "review": {
+                  "type": "string",
+                  "description": "User review",
+                  "maxLength": 300,
+                  "example": "This is a very useful web application"
+                },
+                "rating": {
+                  "type": "number",
+                  "description": "User's rating",
+                  "maxLength": 1,
+                  "example": 3
+                }
+              }
+            }
           }
         }
       },
