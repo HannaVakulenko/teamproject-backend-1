@@ -57,7 +57,11 @@ const register = async (req, res) => {
     const hashPassword = await bcrypt.hash(password, 10);
 
     generateAvatar(name, 200);
-    const avatarURL = await uploadImage(`./temp/${name}_avatar.png`);
+    let avatarURL = await uploadImage(`./temp/${name}_avatar.png`);
+    console.log(avatarURL);
+    if (!avatarURL) {
+        avatarURL = "https://res.cloudinary.com/dici0468p/image/upload/v1692125232/64bcf8d8baf97262d83a50d8-avatarka_o1itua.jpg";
+    }
 
     await User.create({
         ...req.body,
