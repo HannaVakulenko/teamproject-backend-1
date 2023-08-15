@@ -34,10 +34,7 @@ const setReview = async (req, res) => {
         if (user === null) {
             return res.status(404).json({ message: "User not found" });
         }
-        return res.status(201).json({
-            review: result.review,
-            rating: result.rating,
-        });
+        return res.status(201).json({ reviews: [{ review: result.review, rating: result.rating }] });
     } catch (error) {
         const errorMessage = error.message;
         return res.status(400).json({ message: errorMessage });
@@ -56,10 +53,7 @@ const changeReview = async (req, res, next) => {
             return res.status(404).json({ message: "Not found" });
         }
 
-        return res.status(200).json({
-            review: result.review,
-            rating: result.rating,
-        });
+        return res.status(200).json({ reviews: [{ review: result.review, rating: result.rating }] });
     } catch (error) {
         const errorMessage = error.message;
         return res.status(400).json({ message: errorMessage });
@@ -86,18 +80,14 @@ const getReview = async (req, res, next) => {
     try {
         const user = await User.findOne({ _id: req.user.id });
         if (!user.isReview) {
-            return res.status(200).json([]);
+            return res.status(200).json({ reviews: [] });
         }
         updateAvatarReview(req, res);
         const result = await Reviews.findOne({ owner: req.user.id });
         if (result === null) {
             return res.status(404).json({ message: "Not found" });
         }
-
-        return res.status(200).json({
-            review: result.review,
-            rating: result.rating,
-        });
+        return res.status(200).json({ reviews: [{ review: result.review, rating: result.rating }] });
     } catch (error) {
         const errorMessage = error.message;
         return res.status(400).json({ message: errorMessage });
