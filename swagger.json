@@ -9,10 +9,10 @@
   "produces": ["application/json"],
   "servers": [
     {
-      "url": "https://goose-track-gr25.onrender.com"
+      "url": "https://goose-track-gr25.onrender.com/api"
     },
     {
-      "url": "http://localhost:8080"
+      "url": "http://localhost:8080/api"
     }
   ],
   "tags": [
@@ -30,7 +30,7 @@
     }
   ],
   "paths": {
-    "/api/auth/register": {
+    "/auth/register": {
       "post": {
         "tags": ["Auth"],
         "summary": "User registration",
@@ -62,11 +62,14 @@
           },
           "409": {
             "description": "User with this email is already exist"
+          },
+          "500": {
+            "description": "Internal Server Error"
           }
         }
       }
     },
-    "/api/auth/login": {
+    "/auth/login": {
       "post": {
         "tags": ["Auth"],
         "summary": "User login",
@@ -98,14 +101,18 @@
           },
           "401": {
             "description": "Email or password invalid"
+          },
+          "500": {
+            "description": "Internal Server Error"
           }
         }
       }
     },
-    "/api/auth/logout": {
+    "/auth/logout": {
       "post": {
         "tags": ["Auth"],
         "summary": "User logout",
+        "description": "This can only be done by the logged in user.",
         "parameters": [],
         "security": [{ "Bearer": [] }],
         "responses": {
@@ -114,14 +121,18 @@
           },
           "401": {
             "description": "Unauthorized"
+          },
+          "500": {
+            "description": "Internal Server Error"
           }
         }
       }
     },
-    "/api/auth/account": {
+    "/auth/account": {
       "get": {
         "tags": ["Auth"],
         "summary": "Get current user profile info",
+        "description": "This can only be done by the logged in user.",
         "parameters": [],
         "security": [{ "Bearer": [] }],
         "responses": {
@@ -137,12 +148,16 @@
           },
           "401": {
             "description": "Unauthorized"
+          },
+          "500": {
+            "description": "Internal Server Error"
           }
         }
       },
       "patch": {
         "tags": ["Auth"],
         "summary": "update user profile info",
+        "description": "This can only be done by the logged in user.",
         "parameters": [],
         "security": [{ "Bearer": [] }],
         "requestBody": {
@@ -179,10 +194,11 @@
         }
       }
     },
-    "/api/auth/current": {
+    "/auth/current": {
       "get": {
         "tags": ["Auth"],
         "summary": "Get current user",
+        "description": "This can only be done by the logged in user.",
         "parameters": [],
         "security": [{ "Bearer": [] }],
         "responses": {
@@ -198,15 +214,19 @@
           },
           "401": {
             "description": "Unauthorized"
+          },
+          "500": {
+            "description": "Internal Server Error"
           }
         }
       }
     },
 
-    "/api/reviews": {
+    "/reviews": {
       "get": {
         "tags": ["Reviews"],
         "summary": "Get all reviews of all users",
+
         "parameters": [],
         "responses": {
           "200": {
@@ -221,15 +241,19 @@
           },
           "404": {
             "description": "There are currently no reviews"
+          },
+          "500": {
+            "description": "Internal Server Error"
           }
         }
       }
     },
 
-    "/api/reviews/own": {
+    "/reviews/own": {
       "get": {
         "tags": ["Reviews"],
         "summary": "Get own review to the user",
+        "description": "This can only be done by the logged in user.",
         "parameters": [],
         "security": [{ "Bearer": [] }],
         "responses": {
@@ -251,12 +275,16 @@
           },
           "404": {
             "description": "Not found"
+          },
+          "500": {
+            "description": "Internal Server Error"
           }
         }
       },
       "post": {
         "tags": ["Reviews"],
         "summary": "Set own review to the user",
+        "description": "This can only be done by the logged in user.",
         "parameters": [],
         "security": [{ "Bearer": [] }],
         "requestBody": {
@@ -296,12 +324,16 @@
           },
           "404": {
             "description": "User not found"
+          },
+          "500": {
+            "description": "Internal Server Error"
           }
         }
       },
       "patch": {
         "tags": ["Reviews"],
         "summary": "Update own user review",
+        "description": "This can only be done by the logged in user.",
         "parameters": [],
         "security": [{ "Bearer": [] }],
         "requestBody": {
@@ -334,12 +366,16 @@
           },
           "404": {
             "description": "Not found"
+          },
+          "500": {
+            "description": "Internal Server Error"
           }
         }
       },
       "delete": {
         "tags": ["Reviews"],
         "summary": "Delete own user review",
+        "description": "This can only be done by the logged in user.",
         "parameters": [],
         "security": [{ "Bearer": [] }],
         "responses": {
@@ -351,16 +387,20 @@
           },
           "404": {
             "description": "Not found"
+          },
+          "500": {
+            "description": "Internal Server Error"
           }
         }
       }
     },
 
  
-    "/api/tasks": {
+    "/tasks": {
       "get": {
         "tags": ["Tasks"],
         "summary": "Get all user`s tasks per month",
+        "description": "This can only be done by the logged in user.",
         "parameters": [],
         "security": [{ "Bearer": [] }],
         "requestBody": {
@@ -390,6 +430,9 @@
           },
           "404": {
             "description": "Not found"
+          },
+          "500": {
+            "description": "Internal Server Error"
           }
         }
       },
@@ -435,15 +478,19 @@
           },
           "404": {
             "description": "User not found"
+          },
+          "500": {
+            "description": "Internal Server Error"
           }
         }
       }
     },
 
-    "/api/tasks/{id}": {
+    "/tasks/{id}": {
       "patch": {
         "tags": ["Tasks"],
         "summary": "Update task",
+        "description": "This can only be done by the logged in user.",
         "parameters": [],
         "security": [{ "Bearer": [] }],
         "requestBody": {
@@ -476,12 +523,16 @@
           },
           "404": {
             "description": "Not found"
+          },
+          "500": {
+            "description": "Internal Server Error"
           }
         }
       },
       "delete": {
         "tags": ["Tasks"],
         "summary": "Delete task",
+        "description": "This can only be done by the logged in user.",
         "parameters": [],
         "security": [{ "Bearer": [] }],
         "responses": {
@@ -493,6 +544,9 @@
           },
           "404": {
             "description": "Not found"
+          },
+          "500": {
+            "description": "Internal Server Error"
           }
         }
       }
@@ -501,6 +555,7 @@
   "components": {
     "schemas": {
       "ErrorResponse": {
+        "example": "Error response object",
         "type": "object",
         "properties": {
           "message": {
@@ -546,17 +601,11 @@
             "description": "User's email",
             "format": "email"
           },
-          "password": {
+          "token": {
             "type": "string",
-            "description": "User's password",
-            "minLength": 7,
-            "example": "$2a$10$k1/ys98HAHEZMe0E4vGcxeS1k7TW6TZyXDwNbyzDgnPNne9zIb.e6"
+            "description": "Access token for authorization",
+            "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY0ZDYwMTRiMzBmZTlhODA2NDI5ZDFmNCIsImlhdCI6MTY5MTc0NjYzNSwiZXhwIjoxNjkxODI5NDM1fQ.dAtkjqFYB_I4r6vBHWY6d2A2kSuDpkRle9wXfG7mw1A"
           }
-        },
-        "token": {
-          "type": "string",
-          "description": "Access token for authorization",
-          "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY0ZDYwMTRiMzBmZTlhODA2NDI5ZDFmNCIsImlhdCI6MTY5MTc0NjYzNSwiZXhwIjoxNjkxODI5NDM1fQ.dAtkjqFYB_I4r6vBHWY6d2A2kSuDpkRle9wXfG7mw1A"
         }
       },
       "LoginRequest": {
@@ -590,12 +639,6 @@
             "description": "User's email",
             "pattern": "^\\w+([\\.-]?\\w+)*@\\w+([\\.-]?\\w+)*(\\.\\w{2,3})+$",
             "format": "email"
-          },
-          "password": {
-            "type": "string",
-            "description": "User's password",
-            "minLength": 7,
-            "example": "$2a$10$k1/ys98HAHEZMe0E4vGcxeS1k7TW6TZyXDwNbyzDgnPNne9zIb.e6"
           },
           "token": {
             "type": "string",
