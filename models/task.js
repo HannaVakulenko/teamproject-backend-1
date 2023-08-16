@@ -9,7 +9,7 @@ const schema = new mongoose.Schema(
         },
         priority: {
             type: String,
-            enum: ["low", "medium", "pro"],
+            enum: ["low", "medium", "high"],
             required: [true],
         },
         category: {
