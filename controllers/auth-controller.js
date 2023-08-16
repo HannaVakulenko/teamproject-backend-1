@@ -39,6 +39,7 @@ const login = async (req, res) => {
 
     res.json({
         name: user.name,
+        theme: user.theme,
         email,
         token,
     });
@@ -115,17 +116,34 @@ const logout = async (req, res) => {
 const updateUser = async (req, res) => {
     const { id } = req.user;
 
-    const imagePath = req.file.path;
+    if (!req.file) {
+        const { name, email, password, isReview, skype, phone, birthday, theme } = req.body;
+        const result = await User.findByIdAndUpdate(id, { name, email, password, isReview, skype, phone, birthday, theme }, { new: true });
 
+        if (!result) {
+            throw HttpError(404, "Not found");
+        }
+        return res.json({
+            name: result.name,
+            email: result.email,
+            skype: result.skype,
+            phone: result.phone,
+            birthday: result.birthday,
+            avatarURL: result.avatarURL,
+            theme: result.theme,
+        });
+    }
+    const imagePath = req.file.path;
     const avatarURL = await uploadImage(imagePath);
 
-    const { name, email, password, isReview, skype, phone, birthday } = req.body;
-    const result = await User.findByIdAndUpdate(id, { name, email, password, isReview, skype, phone, birthday, avatarURL }, { new: true });
+    const { name, email, password, isReview, skype, phone, birthday, theme } = req.body;
+    const result = await User.findByIdAndUpdate(id, { name, email, password, isReview, skype, phone, birthday, avatarURL, theme }, { new: true });
 
     if (!result) {
         throw HttpError(404, "Not found");
     }
-    res.json({ name: result.name, email: result.email, skype: result.skype, phone: result.phone, birthday: result.birthday, avatarURL: result.avatarURL });
+
+    res.json({ name: result.name, email: result.email, skype: result.skype, phone: result.phone, birthday: result.birthday, avatarURL: result.avatarURL, theme: result.theme });
 };
 
 module.exports = {
