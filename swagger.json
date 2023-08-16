@@ -1068,7 +1068,7 @@
       },
       "TaskSetRequest": {
         "type": "object",
-        "required": ["title", "priority", "category", "start", "end"],
+        "required": ["title", "priority", "category", "start", "end", "date"],
         "properties": {
           "_id": {
             "type": "string",
