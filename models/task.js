@@ -17,10 +17,11 @@ const schema = new mongoose.Schema(
             enum: ["to-do", "in-progress", "done"],
             required: [true],
         },
-        start: { type: String },
-        end: { type: String },
+        start: { type: String, required: [true] },
+        end: { type: String, required: [true] },
         date: {
             type: Date,
+            required: [true],
         },
         owner: {
             type: mongoose.Types.ObjectId,
