@@ -1,6 +1,6 @@
 # teamproject-backend-1
 
-## This is a REST API's for project Goose Track. [Goose Track API Documentation in Swagger] (https://goose-track-gr25.onrender.com/api-docs/)
+## This is a REST API's for project Goose Track. [Goose Track API Documentation in Swagger](https://goose-track-gr25.onrender.com/api-docs/)
 
 It is the task tracker with personal to-do list. The project provides for the possibility of user registration, authentication and authorization. In addition, users can create and track their tasks, assign them by completion status, view their completion statistics over a period of time, and edit and delete their tasks.
 
@@ -32,6 +32,17 @@ Mongoose - a library for working with MongoDB in Node.js
 
 ## Developers:
 
-- [Hanna Vakulenko] (https://github.com/HannaVakulenko)
-- [Dmitro Smirnov] (https://github.com/Lucky13identify)
-- [mykhailo kleban] (https://github.com/DarkSwarp)
+1. [Hanna Vakulenko](https://github.com/HannaVakulenko)
+2. [Dmitro Smirnov](https://github.com/Lucky13identify)
+3. [Mykhailo kleban](https://github.com/DarkSwarp)
+4. [Dmytro Petrenko](https://github.com/petrenkodmytro)
+5. [Oleksandra Selezen](https://github.com/sandra-selezen)
+6. [Ann Dolbina](https://github.com/Dolbina)
+7. [Oleh Protasevych](https://github.com/ProtasevichOleg)
+8. [Aleksandr Lupu](https://github.com/Lupushor)
+9. [Ksenia Fihas](https://github.com/KseniaFihas)
+10. [Dmytro Mykolaichuk](https://github.com/DmytroMykolaichuk)
+11. [Sasha Hil](https://github.com/SashaHil)
+12. [Lina Myrhorodska](https://github.com/LinaMyrhorodska)
+13. [Sergiy Donyk](https://github.com/Donyk-s)
+
