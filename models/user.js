@@ -19,6 +19,7 @@ const userSchema = new Schema(
     skype: { type: String, default: "" },
     phone: { type: String, default: "" },
     birthday: { type: String, default: "" },
+    theme: { type: String, default: "off" }
   },
   { versionKey: false, timestamps: true }
 );
