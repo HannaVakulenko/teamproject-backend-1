@@ -108,7 +108,7 @@ const logout = async (req, res) => {
 
 const updateUser = async (req, res) => {
     const { id } = req.user;
-    let hashPassword = undefined;
+    let hashPassword = "";
     const { name, email, password, skype, phone, birthday, theme } = req.body;
     if (password) {
         hashPassword = await bcrypt.hash(password, 10);
