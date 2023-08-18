@@ -1031,11 +1031,6 @@
         "type": "object",
         "required": ["title", "priority", "category", "start", "end", "date"],
         "properties": {
-          "_id": {
-            "type": "string",
-            "description": "Task database id",
-            "example": "64d7869a9244fdaf11cad0af"
-          },
           "title": {
             "type": "string",
             "description": "Task title",
