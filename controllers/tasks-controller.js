@@ -4,12 +4,7 @@ const { HttpError, ctrlWrapper } = require("../helpers");
 // Get tasks for month
 
 const getTasks = async (req, res) => {
-    const results = await Tasks.find({ owner: req.user.id });
-    const monthStart = new Date(req.query.monthStart);
-    const monthEnd = new Date(req.query.monthEnd);
-    const result = results.filter((result) => {
-        return monthStart.getTime() <= result.date.getTime() && result.date.getTime() <= monthEnd.getTime();
-    });
+    const result = await Tasks.find({ date: { $gte: req.query.monthStart, $lte: req.query.monthEnd }, owner: req.user.id });
 
     res.status(200).json({ tasks: result, avatarURL: req.user.avatarURL });
 };
