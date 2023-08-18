@@ -41,7 +41,6 @@ const changeTask = async (req, res) => {
         start: req.body.start,
         end: req.body.end,
         date: req.body.date,
-        owner: req.user.id,
     };
 
     const result = await Tasks.findOneAndUpdate({ _id: req.params.id, owner: req.user.id }, task, { new: true });
@@ -55,7 +54,7 @@ const changeTask = async (req, res) => {
 // Delete task by ID
 
 const deleteTask = async (req, res) => {
-    const result = await Tasks.findOneAndDelete({ _id: req.params.id }, { owner: req.user.id });
+    const result = await Tasks.findOneAndDelete({ _id: req.params.id, owner: req.user.id });
     if (result === null) {
         throw HttpError(404, "Not found");
     }

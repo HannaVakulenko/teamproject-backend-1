@@ -1,52 +1,63 @@
 const { Schema, model } = require("mongoose");
 const Joi = require("joi");
+const { EMAILREGEXP, MOBILEREGEXP, BIRTHDAYREGEX } = require("../constants/index");
 
 const { handleMongooseError } = require("../helpers");
 
-// eslint-disable-next-line no-useless-escape
-const emailRegexp = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
-
-// Схема для монгуста, что должно записываться при успешной регистрации пользователя
+// Schema for mongoose, what should be logged on successful user registration
 
 const userSchema = new Schema(
-  {
-    name: { type: String, required: true },
-    email: { type: String, match: emailRegexp, unique: true, required: true },
-    password: { type: String, minlength: 7, required: true },
-    token: { type: String, default: "" },
-    isReview: { type: Boolean, default: false },
-    avatarURL: { type: String, default: "" },
-    skype: { type: String, default: "" },
-    phone: { type: String, default: "" },
-    birthday: { type: String, default: "" },
-    theme: { type: String, default: "off" }
-  },
-  { versionKey: false, timestamps: true }
+    {
+        name: { type: String, required: true },
+        email: { type: String, match: EMAILREGEXP, unique: true, required: true },
+        password: { type: String, minlength: 7, required: true },
+        token: { type: String, default: "" },
+        isReview: { type: Boolean, default: false },
+        avatarURL: { type: String, default: "https://res.cloudinary.com/dici0468p/image/upload/v1692125232/64bcf8d8baf97262d83a50d8-avatarka_o1itua.jpg" },
+        skype: { type: String, default: "" },
+        phone: { type: String, default: "" },
+        birthday: { type: String, default: "" },
+        theme: { type: String, default: "off" },
+    },
+    { versionKey: false, timestamps: true }
 );
 
 userSchema.post("save", handleMongooseError);
 
-// Схема для регистрации
+// Scheme for registration
 
 const registerSchema = Joi.object({
-  name: Joi.string().required(),
-  email: Joi.string().pattern(emailRegexp).required(),
-  password: Joi.string().min(7).required(),
+    name: Joi.string().required(),
+    email: Joi.string().pattern(EMAILREGEXP).required(),
+    password: Joi.string().min(7).required(),
 });
 
-// Схема для авторизации
+// Scheme for update user data
+
+const updateSchema = Joi.object({
+    name: Joi.string(),
+    email: Joi.string().pattern(EMAILREGEXP),
+    password: Joi.string().min(7),
+    phone: Joi.string().pattern(MOBILEREGEXP),
+    birthday: Joi.string().pattern(BIRTHDAYREGEX),
+    theme: Joi.string(),
+    avatarURL: Joi.string(),
+    skype: Joi.string(),
+});
+
+// Scheme for authorization
 
 const loginSchema = Joi.object({
-  email: Joi.string().pattern(emailRegexp).required(),
-  password: Joi.string().min(7).required(),
+    email: Joi.string().pattern(EMAILREGEXP).required(),
+    password: Joi.string().min(7).required(),
 });
 
-// Создаем схемы
-const schemas = { registerSchema, loginSchema };
+// Creating schemas
+const schemas = { registerSchema, loginSchema, updateSchema };
 
 const User = model("user", userSchema);
 
 module.exports = {
-  User,
-  schemas,
+    User,
+    schemas,
 };

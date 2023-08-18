@@ -58,11 +58,7 @@ const register = async (req, res) => {
     const hashPassword = await bcrypt.hash(password, 10);
 
     generateAvatar(name, 200);
-    let avatarURL = await uploadImage(`./temp/${name}_avatar.png`);
-    console.log(avatarURL);
-    if (!avatarURL) {
-        avatarURL = "https://res.cloudinary.com/dici0468p/image/upload/v1692125232/64bcf8d8baf97262d83a50d8-avatarka_o1itua.jpg";
-    }
+    const avatarURL = await uploadImage(`./temp/${name}_avatar.png`);
 
     await User.create({
         ...req.body,
@@ -87,14 +83,11 @@ const getCurrent = async (req, res) => {
 // Getting user data
 
 const getUser = async (req, res) => {
-    const { _id, name, email, password, isReview, avatarURL, skype, phone, birthday } = req.user;
+    const { name, email, avatarURL, skype, phone, birthday } = req.user;
 
     res.json({
-        _id,
         name,
         email,
-        password,
-        isReview,
         avatarURL,
         skype,
         phone,
@@ -115,10 +108,13 @@ const logout = async (req, res) => {
 
 const updateUser = async (req, res) => {
     const { id } = req.user;
-
+    let hashPassword = undefined;
+    const { name, email, password, skype, phone, birthday, theme } = req.body;
+    if (password) {
+        hashPassword = await bcrypt.hash(password, 10);
+    }
     if (!req.file) {
-        const { name, email, password, isReview, skype, phone, birthday, theme } = req.body;
-        const result = await User.findByIdAndUpdate(id, { name, email, password, isReview, skype, phone, birthday, theme }, { new: true });
+        const result = await User.findByIdAndUpdate(id, { name, email, password: hashPassword, skype, phone, birthday, theme }, { new: true });
 
         if (!result) {
             throw HttpError(404, "Not found");
@@ -136,8 +132,7 @@ const updateUser = async (req, res) => {
     const imagePath = req.file.path;
     const avatarURL = await uploadImage(imagePath);
 
-    const { name, email, password, isReview, skype, phone, birthday, theme } = req.body;
-    const result = await User.findByIdAndUpdate(id, { name, email, password, isReview, skype, phone, birthday, avatarURL, theme }, { new: true });
+    const result = await User.findByIdAndUpdate(id, { name, email, password: hashPassword, skype, phone, birthday, avatarURL, theme }, { new: true });
 
     if (!result) {
         throw HttpError(404, "Not found");

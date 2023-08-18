@@ -4,14 +4,11 @@ const { HttpError, ctrlWrapper } = require("../helpers");
 // Get all reviews
 
 const getAllReviews = async (req, res) => {
-    const result = await Reviews.find();
-    const sortResult = result.sort(function (a, b) {
-        return b.updatedAt.getTime() - a.updatedAt.getTime();
-    });
+    const result = await Reviews.find().sort({ updatedAt: -1 });
     if (req.query.page === undefined) {
-        return res.status(200).json({ reviews: sortResult, total: sortResult.length });
+        return res.status(200).json({ reviews: result, total: result.length });
     }
-    return res.status(200).json({ reviews: sortResult.slice((req.query.page - 1) * req.query.limit, req.query.page * req.query.limit), total: sortResult.length });
+    return res.status(200).json({ reviews: result.slice((req.query.page - 1) * req.query.limit, req.query.page * req.query.limit), total: result.length });
 };
 
 // Post owner's review
