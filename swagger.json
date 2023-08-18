@@ -403,17 +403,6 @@
         "description": "This can only be done by the logged in user.",
         "parameters": [],
         "security": [{ "Bearer": [] }],
-        "requestBody": {
-          "description": "Calendar period object",
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/TaskArrayGetMonthRequest"
-              }
-            }
-          }
-        },
         "responses": {
           "200": {
             "description": "Successful operation",
@@ -491,7 +480,15 @@
         "tags": ["Tasks"],
         "summary": "Update task",
         "description": "This can only be done by the logged in user.",
-        "parameters": [],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "type": "string",
+            "description": "Task's id"
+          }
+        ],
         "security": [{ "Bearer": [] }],
         "requestBody": {
           "description": "Task update object",
@@ -533,7 +530,15 @@
         "tags": ["Tasks"],
         "summary": "Delete task",
         "description": "This can only be done by the logged in user.",
-        "parameters": [],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "type": "string",
+            "description": "Task's id"
+          }
+        ],
         "security": [{ "Bearer": [] }],
         "responses": {
           "200": {
@@ -596,6 +601,11 @@
             "description": "User's name",
             "example": "Bob Smith"
           },
+          "theme": {
+            "type": "string",
+            "description": "Theme (light/dark) display of the user's private page",
+            "example": "dark"
+          },
           "email": {
             "type": "string",
             "description": "User's email",
@@ -634,6 +644,11 @@
             "description": "User's name",
             "example": "Bob Smith"
           },
+          "theme": {
+            "type": "string",
+            "description": "Theme (light/dark) display of the user's private page",
+            "example": "dark"
+          },
           "email": {
             "type": "string",
             "description": "User's email",
@@ -660,11 +675,6 @@
       "UserGetInfoResponse": {
         "type": "object",
         "properties": {
-          "_id": {
-            "type": "string",
-            "description": "User's database id",
-            "example": "64d898042763ba4ad83d4d0a"
-          },
           "name": {
             "type": "string",
             "description": "User's name",
@@ -674,16 +684,6 @@
             "type": "string",
             "description": "User's email",
             "format": "email"
-          },
-          "password": {
-            "type": "string",
-            "description": "User's password",
-            "minLength": 7,
-            "example": "$2a$10$k1/ys98HAHEZMe0E4vGcxeS1k7TW6TZyXDwNbyzDgnPNne9zIb.e6"
-          },
-          "isReview": {
-            "type": "boolean",
-            "description": "Does the user have a review?"
           },
           "avatarURL": {
             "type": "string",
@@ -722,10 +722,6 @@
             "minLength": 7,
             "example": "qwertonity"
           },
-          "isReview": {
-            "type": "boolean",
-            "description": "Does the user have a review?"
-          },
           "avatarURL": {
             "type": "string",
             "format": "uri",
@@ -747,11 +743,6 @@
       "UserUpdateResponse": {
         "type": "object",
         "properties": {
-          "_id": {
-            "type": "string",
-            "description": "User's database id",
-            "example": "64d898042763ba4ad83d4d0a"
-          },
           "name": {
             "type": "string",
             "description": "User's name",
@@ -761,22 +752,6 @@
             "type": "string",
             "description": "User's email",
             "format": "email"
-          },
-          "password": {
-            "type": "string",
-            "description": "User's password",
-            "minLength": 7,
-            "example": "$2a$10$k1/ys98HAHEZMe0E4vGcxeS1k7TW6TZyXDwNbyzDgnPNne9zIb.e6"
-          },
-          "isReview": {
-            "type": "boolean",
-            "description": "Does the user have a review?"
-          },
-          "avatarURL": {
-            "type": "string",
-            "format": "uri",
-            "description": "User's avatar",
-            "example": "http://res.cloudinary.com/dici0468p/image/upload/v1692016055/Luka_avatar.png"
           },
           "skype": {
             "type": "string"
@@ -788,13 +763,16 @@
             "type": "string",
             "format": "date"
           },
-          "createdAt": {
+          "avatarURL": {
             "type": "string",
-            "format": "date"
+            "format": "uri",
+            "description": "User's avatar",
+            "example": "http://res.cloudinary.com/dici0468p/image/upload/v1692016055/Luka_avatar.png"
           },
-          "updatedAt": {
+          "theme": {
             "type": "string",
-            "format": "date"
+            "description": "Theme (light/dark) display of the user's private page",
+            "example": "dark"
           }
         }
       },
@@ -972,23 +950,6 @@
                 }
               }
             }
-          }
-        }
-      },
-      "TaskArrayGetMonthRequest": {
-        "type": "object",
-        "properties": {
-          "monthStart": {
-            "type": "string",
-            "format": "date",
-            "example": "2023-08-01",
-            "description": "The First day of month"
-          },
-          "monthEnd": {
-            "type": "string",
-            "format": "date",
-            "example": "2023-08-31",
-            "description": "The Last day of month"
           }
         }
       },
