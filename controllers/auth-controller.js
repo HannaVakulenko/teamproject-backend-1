@@ -130,7 +130,7 @@ const updateUser = async (req, res) => {
         });
     }
     const imagePath = req.file.path;
-    const avatarURL = await uploadImage(imagePath);
+    const avatarURL = await uploadImage(imagePath, id);
 
     const result = await User.findByIdAndUpdate(id, { name, email, password: hashPassword, skype, phone, birthday, avatarURL, theme }, { new: true });
 

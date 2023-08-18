@@ -9,15 +9,16 @@ cloudinary.config({
     api_secret: CLOUDINARY_API_SECRET,
 });
 
-const uploadImage = async (imagePath) => {
+const uploadImage = async (imagePath, id) => {
     // Use the uploaded file's name as the asset's public ID and
     // allow overwriting the asset with new versions
-    const options = {
+  const options = {
+        public_id:id,
         use_filename: true,
         unique_filename: false,
         overwrite: true,
     };
-
+console.log(imagePath);
     try {
         // Upload the image
         const result = await cloudinary.uploader.upload(imagePath, options);
