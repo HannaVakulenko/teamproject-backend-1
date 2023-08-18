@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const { CATEGORY, PRIORITY } = require("../constants/index");
 
 const schema = new mongoose.Schema(
     {
@@ -9,16 +10,37 @@ const schema = new mongoose.Schema(
         },
         priority: {
             type: String,
-            enum: ["low", "medium", "high"],
+            enum: PRIORITY,
             required: [true],
         },
         category: {
             type: String,
-            enum: ["to-do", "in-progress", "done"],
+            enum: CATEGORY,
             required: [true],
         },
-        start: { type: String, required: [true] },
-        end: { type: String, required: [true] },
+        start: {
+            type: String,
+            required: true,
+            validate: {
+                validator: function (start) {
+                    const [hoursStart, minutesStart] = start.split(":").map(Number);
+                    const hoursInMillisecondsStart = hoursStart * 60 * 60 * 1000;
+                    const minutesInMillisecondsStart = minutesStart * 60 * 1000;
+                    const startMS = hoursInMillisecondsStart + minutesInMillisecondsStart;
+                    const [hoursEnd, minutesEnd] = this.end.split(":").map(Number);
+                    const hoursInMillisecondEnd = hoursEnd * 60 * 60 * 1000;
+                    const minutesInMillisecondsEnd = minutesEnd * 60 * 1000;
+                    const endMS = hoursInMillisecondEnd + minutesInMillisecondsEnd;
+
+                    return startMS < endMS;
+                },
+                message: (props) => `The start value (${props.value}) should be less than the end value`,
+            },
+        },
+        end: {
+            type: String,
+            required: true,
+        },
         date: {
             type: Date,
             required: [true],
@@ -30,5 +52,7 @@ const schema = new mongoose.Schema(
     },
     { versionKey: false }
 );
+
+
 
 module.exports = mongoose.model("tasks", schema);
