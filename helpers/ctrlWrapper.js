@@ -3,7 +3,13 @@ const ctrlWrapper = (ctrl) => {
     try {
       await ctrl(req, res, next);
     } catch (error) {
-      next(error);
+
+      if (error.name === "ValidationError") {
+          res.status(400).json({ error: error.message });
+      } else {
+          next(error); // Pass the error to the next middleware (usually the error handling middleware)
+      }
+      // next(error);
     }
   };
 
@@ -11,3 +17,4 @@ const ctrlWrapper = (ctrl) => {
 };
 
 module.exports = ctrlWrapper;
+
