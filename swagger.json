@@ -36,7 +36,7 @@
         "summary": "User registration",
         "parameters": [],
         "requestBody": {
-          "description": "Registration object",
+          "description": "# Description of request parameters of registration object:\n\n**name** - string, user name.\n\n**email** - string, user e-mail. \n\n**password** - string, encrypted user password. \n",
           "required": true,
           "content": {
             "application/json": {
@@ -75,7 +75,7 @@
         "summary": "User login",
         "parameters": [],
         "requestBody": {
-          "description": "User login object",
+          "description": "# Description of request parameters of User login object:\n\n**email** - string, user e-mail. \n\n**password** - string, encrypted user password. \n",
           "required": true,
           "content": {
             "application/json": {
@@ -288,7 +288,7 @@
         "parameters": [],
         "security": [{ "Bearer": [] }],
         "requestBody": {
-          "description": "Set own user`s review object",
+          "description": "# Description of request parameters of creating own user`s review object:\n\n**review** - string, user review text.\n\n**rating** - number, user-selected app rating.\n",
           "required": true,
           "content": {
             "application/json": {
@@ -337,7 +337,7 @@
         "parameters": [],
         "security": [{ "Bearer": [] }],
         "requestBody": {
-          "description": "User`s review update object",
+          "description": "# Description of request parameters of user`s review update object:\n\n**review** - string, user review text.\n\n**rating** - number, user-selected app rating.\n",
           "required": true,
           "content": {
             "application/json": {
@@ -431,7 +431,7 @@
         "parameters": [],
         "security": [{ "Bearer": [] }],
         "requestBody": {
-          "description": "Set user`s task object",
+          "description": "# Description of request parameters of creating user`s task object:\n\n**title** - string, maxLength: 250, task title.\n\n**priority** - string, task priority. Allowed values are 'low', 'medium', 'high'\n\n**category** - string, task category. Allowed values are 'to-do', 'in-progress', 'done'\n\n**start** - string($time), task start time.\n\n**end** - string($time), task finish time.\n\n**date** - string($date), Task completion date.\n",
           "required": true,
           "content": {
             "application/json": {
@@ -491,7 +491,7 @@
         ],
         "security": [{ "Bearer": [] }],
         "requestBody": {
-          "description": "Task update object",
+          "description": "# Description of request parameters of user task update object:\n\n**title** - string, maxLength: 250, task title.\n\n**priority** - string, task priority. Allowed values are 'low', 'medium', 'high'\n\n**category** - string, task category. Allowed values are 'to-do', 'in-progress', 'done'\n\n**start** - string($time), task start time.\n\n**end** - string($time), task finish time.\n\n**date** - string($date), Task completion date.\n",
           "required": true,
           "content": {
             "application/json": {
@@ -977,13 +977,13 @@
                   "type": "string",
                   "enum": ["low", "medium", "high"],
                   "default": "low",
-                  "description": "Task priority"
+                  "description": "Task priority. Allowed values are 'low', 'medium', 'high'"
                 },
                 "category": {
                   "type": "string",
-                  "enum": ["To do", "In progress", "Done"],
-                  "default": "To do",
-                  "description": "Task category"
+                  "enum": ["to-do", "in-progress", "done"],
+                  "default": "to-do",
+                  "description": "Task category. Allowed values are 'to-do', 'in-progress', 'done'"
                 },
                 "start": {
                   "type": "string",
@@ -1001,7 +1001,7 @@
                   "type": "string",
                   "format": "date",
                   "example": "2023-08-22",
-                  "description": "When tasks are performed"
+                  "description": "Task completition date"
                 },
                 "owner": {
                   "type": "string",
@@ -1041,13 +1041,13 @@
             "type": "string",
             "enum": ["low", "medium", "high"],
             "default": "low",
-            "description": "Task priority"
+            "description": "Task priority. Allowed values are 'low', 'medium', 'high'"
           },
           "category": {
             "type": "string",
-            "enum": ["To do", "In progress", "Done"],
-            "default": "To do",
-            "description": "Task category"
+            "enum": ["to-do", "in-progress", "done"],
+            "default": "to-do",
+            "description": "Task category. Allowed values are 'to-do', 'in-progress', 'done'"
           },
           "start": {
             "type": "string",
@@ -1065,7 +1065,7 @@
             "type": "string",
             "format": "date",
             "example": "2023-08-22",
-            "description": "When tasks are performed"
+            "description": "Task completion date"
           }
         }
       },
@@ -1082,13 +1082,13 @@
             "type": "string",
             "enum": ["low", "medium", "high"],
             "default": "low",
-            "description": "Task priority"
+            "description": "Task priority. Allowed values are 'low', 'medium', 'high'"
           },
           "category": {
             "type": "string",
-            "enum": ["To do", "In progress", "Done"],
-            "default": "To do",
-            "description": "Task category"
+            "enum": ["to-do", "in-progress", "done"],
+            "default": "to-do",
+            "description": "Task category. Allowed values are 'to-do', 'in-progress', 'done'"
           },
           "start": {
             "type": "string",
@@ -1106,7 +1106,7 @@
             "type": "string",
             "format": "date",
             "example": "2023-08-22",
-            "description": "When tasks are performed"
+            "description": "Task completion date"
           },
           "owner": {
             "type": "string",
@@ -1141,13 +1141,13 @@
             "type": "string",
             "enum": ["low", "medium", "high"],
             "default": "low",
-            "description": "Task priority"
+            "description": "Task priority. Allowed values are 'low', 'medium', 'high'"
           },
           "category": {
             "type": "string",
-            "enum": ["To do", "In progress", "Done"],
-            "default": "To do",
-            "description": "Task category"
+            "enum": ["to-do", "in-progress", "done"],
+            "default": "to-do",
+            "description": "Task category. Allowed values are 'to-do', 'in-progress', 'done'"
           },
           "start": {
             "type": "string",
@@ -1165,7 +1165,7 @@
             "type": "string",
             "format": "date",
             "example": "2023-08-22",
-            "description": "When tasks are performed"
+            "description": "Task completion date"
           }
         }
       },
@@ -1187,13 +1187,13 @@
             "type": "string",
             "enum": ["low", "medium", "high"],
             "default": "low",
-            "description": "Task priority"
+            "description": "Task priority. Allowed values are 'low', 'medium', 'high'"
           },
           "category": {
             "type": "string",
-            "enum": ["To do", "In progress", "Done"],
-            "default": "To do",
-            "description": "Task category"
+            "enum": ["to-do", "in-progress", "done"],
+            "default": "to-do",
+            "description": "Task category. Allowed values are 'to-do', 'in-progress', 'done'"
           },
           "start": {
             "type": "string",
@@ -1211,7 +1211,7 @@
             "type": "string",
             "format": "date",
             "example": "2023-08-22",
-            "description": "When tasks are performed"
+            "description": "Task completion date"
           },
           "createdAt": {
             "type": "string",
