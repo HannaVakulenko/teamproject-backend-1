@@ -1,5 +1,5 @@
 const mongoose = require("mongoose");
-const { CATEGORY, PRIORITY } = require("../constants/index");
+const { CATEGORY, PRIORITY, TIMEREGEX } = require("../constants/index");
 
 const schema = new mongoose.Schema(
     {
@@ -21,6 +21,7 @@ const schema = new mongoose.Schema(
         start: {
             type: String,
             required: true,
+            match: TIMEREGEX,
             validate: {
                 validator: function (start) {
                     const [hoursStart, minutesStart] = start.split(":").map(Number);
@@ -40,6 +41,7 @@ const schema = new mongoose.Schema(
         end: {
             type: String,
             required: true,
+            match: TIMEREGEX,
         },
         date: {
             type: Date,
@@ -52,7 +54,5 @@ const schema = new mongoose.Schema(
     },
     { versionKey: false }
 );
-
-
 
 module.exports = mongoose.model("tasks", schema);

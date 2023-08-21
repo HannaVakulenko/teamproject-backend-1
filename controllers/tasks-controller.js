@@ -5,7 +5,6 @@ const { HttpError, ctrlWrapper } = require("../helpers");
 
 const getTasks = async (req, res) => {
     const result = await Tasks.find({ date: { $gte: req.query.monthStart, $lte: req.query.monthEnd }, owner: req.user.id });
-
     res.status(200).json({ tasks: result, avatarURL: req.user.avatarURL });
 };
 
