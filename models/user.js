@@ -1,6 +1,6 @@
 const { Schema, model } = require("mongoose");
 const Joi = require("joi");
-const { EMAILREGEXP, MOBILEREGEXP, BIRTHDAYREGEX } = require("../constants/index");
+const { EMAILREGEXP, MOBILEREGEXP } = require("../constants/index");
 
 const { handleMongooseError } = require("../helpers");
 
@@ -16,7 +16,7 @@ const userSchema = new Schema(
         avatarURL: { type: String, default: "https://res.cloudinary.com/dici0468p/image/upload/v1692125232/64bcf8d8baf97262d83a50d8-avatarka_o1itua.jpg" },
         skype: { type: String, default: "" },
         phone: { type: String, default: "" },
-        birthday: { type: String, default: "" },
+        birthday: { type: Date, default: null },
         theme: { type: String, default: "light" },
     },
     { versionKey: false, timestamps: true }
@@ -39,7 +39,7 @@ const updateSchema = Joi.object({
     email: Joi.string().pattern(EMAILREGEXP),
     password: Joi.string().min(7),
     phone: Joi.string().pattern(MOBILEREGEXP),
-    birthday: Joi.string().pattern(BIRTHDAYREGEX),
+    birthday: Joi.date(),
     theme: Joi.string(),
     avatarURL: Joi.string(),
     skype: Joi.string(),

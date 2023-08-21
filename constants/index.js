@@ -10,6 +10,8 @@ const MOBILEREGEXP = /^\d{11}/;
 // Date validation in format DD/MM/YYYY
 const BIRTHDAYREGEX = /^(0[1-9]|[12][0-9]|3[01])\/(0[1-9]|1[0-2])\/(19|20)\d\d$/;
 
+// Date validation in format HH:MM
+const TIMEREGEX = /^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$/;
 
 module.exports = {
     CATEGORY,
@@ -17,4 +19,5 @@ module.exports = {
     EMAILREGEXP,
     MOBILEREGEXP,
     BIRTHDAYREGEX,
+    TIMEREGEX,
 };
