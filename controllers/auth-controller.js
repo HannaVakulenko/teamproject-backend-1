@@ -1,7 +1,5 @@
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
-const crypto = require("crypto");
-const { sendEmail } = require("../services/email");
 
 // Require the cloudinary library
 const cloudinary = require("cloudinary").v2;
@@ -62,16 +60,14 @@ const register = async (req, res) => {
     generateAvatar(name, 200);
     const avatarURL = await uploadImage(`./temp/${name}_avatar.png`);
 
-    const result = await User.create({
+    await User.create({
         ...req.body,
         password: hashPassword,
         avatarURL,
-        verificationToken: crypto.randomUUID(),
     });
 
-    sendEmail(email, result.verificationToken, result.name);
-
-    res.status(201).json({ message: "Letter sent to your mail" });
+    // Calling the login controller
+    login(req, res);
 };
 
 // Getting the current token
@@ -145,64 +141,6 @@ const updateUser = async (req, res) => {
     res.json({ name: result.name, email: result.email, skype: result.skype, phone: result.phone, birthday: result.birthday, avatarURL: result.avatarURL, theme: result.theme });
 };
 
-const getVerificationEmail = async (req, res) => {
-    const { email } = req.body;
-
-    const user = await User.findOne({ email });
-
-    if (user === null) {
-        throw HttpError(401, "Missing required field email");
-    }
-
-    if (user.verify) {
-        throw HttpError(400, "Verification has already been passed");
-    }
-    sendEmail(user.email, user.verificationToken, user.name);
-    return res.status(200).json({ message: "Letter sent to your mail" });
-};
-
-const verificationLogin = async (req, res) => {
-    const { email, password } = req;
-
-    const user = await User.findOne({ email });
-
-    if (user === null) {
-        throw HttpError(401, "Email or password is wrong");
-    }
-
-    if (password !== user.password) {
-        throw HttpError(401, "Email or password is wrong");
-    }
-
-    if (!user.verify) {
-        throw HttpError(401, "Verification failed");
-    }
-
-    const payload = {
-        id: user._id,
-    };
-
-    const token = jwt.sign(payload, JWT_SECRET, { expiresIn: "23h" });
-    await User.findByIdAndUpdate(user._id, { token });
-
-    res.json({
-        name: user.name,
-        theme: user.theme,
-        email,
-        token,
-    });
-};
-
-const verificationToken = async (req, res, next) => {
-    const result = await User.findOne({ verificationToken: req.params.verificationToken });
-    if (result === null) {
-        throw HttpError(404, "User not found");
-    }
-
-    const userResult = await User.findOneAndUpdate({ verificationToken: req.params.verificationToken }, { verificationToken: null, verify: true }, { new: true });
-    verificationLogin(userResult, res);
-};
-
 module.exports = {
     register: ctrlWrapper(register),
     login: ctrlWrapper(login),
@@ -210,6 +148,4 @@ module.exports = {
     logout: ctrlWrapper(logout),
     updateUser: ctrlWrapper(updateUser),
     getUser: ctrlWrapper(getUser),
-    getVerificationEmail: ctrlWrapper(getVerificationEmail),
-    verificationToken: ctrlWrapper(verificationToken),
 };
