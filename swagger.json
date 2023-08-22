@@ -36,7 +36,7 @@
         "summary": "User registration",
         "parameters": [],
         "requestBody": {
-          "description": "# Description of request parameters of registration object:\n\n**name** - string, user name.\n\n**email** - string, user e-mail. \n\n**password** - string, encrypted user password. \n",
+          "description": "# Description of request parameters of registration object:\n\n**name** - string, user name, must be at least 2 characters long, for example 'Bob Smith' or 'Jack'.\n\n**email** - string, user e-mail, email address must contain an '@' sign, for example 'smith@mail.com'. \n\n**password** - string, encrypted user password, must be at least 7 characters long. \n",
           "required": true,
           "content": {
             "application/json": {
@@ -75,7 +75,7 @@
         "summary": "User login",
         "parameters": [],
         "requestBody": {
-          "description": "# Description of request parameters of User login object:\n\n**email** - string, user e-mail. \n\n**password** - string, encrypted user password. \n",
+          "description": "# Description of request parameters of User login object:\n\n**email** - string, user e-mail, email address must contain an '@' sign, for example 'smith@mail.com'. \n\n**password** - string, encrypted user password, must be at least 7 characters long. \n",
           "required": true,
           "content": {
             "application/json": {
@@ -161,7 +161,7 @@
         "parameters": [],
         "security": [{ "Bearer": [] }],
         "requestBody": {
-          "description": "User changes profile object",
+          "description": "# Description of request parameters of User changes profile object:\n\n**name** - string, user name, must be at least 2 characters long, for example 'Bob Smith' or 'Jack'.\n\n**email** - string, user e-mail, email address must contain an '@' sign, for example 'smith@mail.com'. \n\n**password** - string, encrypted user password, must be at least 7 characters long. \n\n**avatarURL** - string($uri), user avatar, example - 'http://res.cloudinary.com/dici0468p/image/upload/v1692017234/404-mob-1x.webp'. \n\n**skype** - string, user skypeId, must be maximum 16 characters long, for example 'bobskype'. \n\n**phone** - string, user phone. for example '+380971234567' or '380971234567' or '0971234567'. \n\n**birthday** - string($date), user birthday,  for example '2000-01-01'. \n",
           "required": true,
           "content": {
             "multipart/form-data": {
@@ -577,6 +577,7 @@
           "name": {
             "type": "string",
             "description": "User's name",
+            "pattern": "^[a-zA-Zа-яА-Я]+(([' -][a-zA-Zа-яА-Я ])?[a-zA-Zа-яА-Я]*)*$",
             "example": "Bob Smith"
           },
           "email": {
@@ -683,7 +684,8 @@
           "email": {
             "type": "string",
             "description": "User's email",
-            "format": "email"
+            "format": "email",
+            "example": "smith@mail.com"
           },
           "avatarURL": {
             "type": "string",
@@ -692,10 +694,12 @@
             "example": "http://res.cloudinary.com/dici0468p/image/upload/v1692016055/Luka_avatar.png"
           },
           "skype": {
-            "type": "string"
+            "type": "string",
+            "example": "skypeUser"
           },
           "phone": {
-            "type": "string"
+            "type": "string",
+            "example": "+380971234567, 380971234567, 0971234567"
           },
           "birthday": {
             "type": "string",
@@ -709,12 +713,16 @@
           "name": {
             "type": "string",
             "description": "User's name",
+            "maxLength": 16,
+            "pattern": "^[a-zA-Zа-яА-Я]+(([' -][a-zA-Zа-яА-Я ])?[a-zA-Zа-яА-Я]*)*$",
             "example": "Bob Smith"
           },
           "email": {
             "type": "string",
+            "pattern": "^\\w+([\\.-]?\\w+)*@\\w+([\\.-]?\\w+)*(\\.\\w{2,3})+$",
             "description": "User's email",
-            "format": "email"
+            "format": "email",
+            "example": "smith@mail.com"
           },
           "password": {
             "type": "string",
@@ -729,14 +737,22 @@
             "example": "http://res.cloudinary.com/dici0468p/image/upload/v1692017234/404-mob-1x.webp"
           },
           "skype": {
-            "type": "string"
+            "description": "User's skypeId",
+            "type": "string",
+            "maxLength": 16,
+            "example": "bobskype"
           },
           "phone": {
-            "type": "string"
+            "description": "User's phone number",
+            "type": "string",
+            "pattern": "^(?:\\+380\\d{9}|0\\d{9}|380\\d{9}|38\\s\\d{3}\\s\\d{3}\\s\\d{2}\\s\\d{2})$",
+            "example": "+380971234567 or 380971234567 or 0971234567"
           },
           "birthday": {
+            "description": "User's birthday",
             "type": "string",
-            "format": "date"
+            "format": "date",
+            "example": "2000-01-01"
           }
         }
       },
@@ -757,7 +773,8 @@
             "type": "string"
           },
           "phone": {
-            "type": "string"
+            "type": "string",
+            "example": "+380971234567, 380971234567, 0971234567"
           },
           "birthday": {
             "type": "string",
