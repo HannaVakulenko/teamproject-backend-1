@@ -23,7 +23,7 @@ const sendEmail = (email, verificationToken, name) => {
         <h3 style="text-align: center; color:#171820; font-size: 18px;">We're glad you're here, ${name} 🥳</h3>
         <p style="text-align: center;"><em><span style="color: #171820; font-size: 18px;">Just confirming you're you.</span></em></p>
         <div style="margin: 0 auto; text-align: center;">
-        <a target="_blank" style="display: inline-block; margin: 0 auto; font-size: 18px; background-color: #007bff; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px;" href="http://localhost:3000/?varification=${verificationToken}">Activate Account</a>
+        <a target="_blank" style="display: inline-block; margin: 0 auto; font-size: 18px; background-color: #007bff; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px;" href="https://goose-track-gr25.onrender.com/?varification=${verificationToken}">Activate Account</a>
         </div>
         <br>
         <p style="text-align: center; color: #171820; font-size: 18px;">If you didn't sign up for an account, you can safely ignore this email.</p>
