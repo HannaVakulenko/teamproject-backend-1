@@ -193,7 +193,7 @@ const verificationLogin = async (req, res) => {
     });
 };
 
-const verificationToken = async (req, res, next) => {
+const verificationToken = async (req, res) => {
     const result = await User.findOne({ verificationToken: req.params.verificationToken });
     if (result === null) {
         throw HttpError(404, "User not found");
