@@ -1,7 +1,5 @@
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
-const crypto = require("crypto");
-const { sendEmail } = require("../services/email");
 
 // Require the cloudinary library
 const cloudinary = require("cloudinary").v2;
@@ -62,16 +60,14 @@ const register = async (req, res) => {
     generateAvatar(name, 200);
     const avatarURL = await uploadImage(`./temp/${name}_avatar.png`);
 
-    const result = await User.create({
+    await User.create({
         ...req.body,
         password: hashPassword,
         avatarURL,
-        verificationToken: crypto.randomUUID(),
     });
 
-    sendEmail(email, result.verificationToken, result.name);
-
-    res.status(201).json({ message: "Letter sent to your mail" });
+    // Calling the login controller
+    login(req, res);
 };
 
 // Getting the current token
@@ -210,6 +206,4 @@ module.exports = {
     logout: ctrlWrapper(logout),
     updateUser: ctrlWrapper(updateUser),
     getUser: ctrlWrapper(getUser),
-    getVerificationEmail: ctrlWrapper(getVerificationEmail),
-    verificationToken: ctrlWrapper(verificationToken),
 };

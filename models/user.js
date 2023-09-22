@@ -18,14 +18,6 @@ const userSchema = new Schema(
         phone: { type: String, default: "" },
         birthday: { type: Date, default: null },
         theme: { type: String, default: "light" },
-        verificationToken: {
-            type: String,
-            required: [true, "Verify token is required"],
-        },
-        verify: {
-            type: Boolean,
-            default: false,
-        },
     },
     { versionKey: false, timestamps: true }
 );
