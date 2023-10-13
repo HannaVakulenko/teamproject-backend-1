@@ -1,11 +1,9 @@
-const isValidId = require("./isValidId");
 const authenticate = require("./authenticate");
-const validateBody = require("./validateBody");
-const upload = require("./upload");
+const isUserInTableRegister = require("./isUserInTableRegister");
+const isUserInTableLogin = require("./isUserInTableLogin");
 
 module.exports = {
-  isValidId,
   authenticate,
-  validateBody,
-  upload,
+  isUserInTableRegister,
+  isUserInTableLogin,
 };

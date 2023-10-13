@@ -1,17 +1,7 @@
-const mongoose = require("mongoose");
+// eslint-disable-next-line no-unused-expressions
+require("dotenv").config;
 
 const app = require("./app");
 
-const { DB_URI, PORT = 8080 } = process.env;
-
-mongoose
-  .connect(DB_URI)
-  .then(() => {
-    app.listen(PORT, () => {
-      console.log("Database connection successful");
-    });
-  })
-  .catch((error) => {
-    console.log(error.message);
-    process.exit(1);
-  });
+const PORT = process.env.PORT || 8080;
+app.listen(PORT, () => console.log(`Server running on PORT ${PORT}`));

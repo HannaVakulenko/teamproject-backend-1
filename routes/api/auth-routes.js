@@ -1,21 +1,18 @@
 const express = require("express");
-
-const ctrl = require("../../controllers/auth-controller");
-const { validateBody, authenticate, upload } = require("../../middlewares");
-const { schemas } = require("../../models/index");
-
 const router = express.Router();
 
+const ctrl = require("../../controllers/auth-controller");
+const {
+  authenticate,
+  isUserInTableRegister,
+  isUserInTableLogin,
+} = require("../../middlewares");
+
 // SignUp
-router.post(
-  "/register",
-  upload.single("avatar"),
-  validateBody(schemas.registerSchema),
-  ctrl.register
-);
+router.post("/register", isUserInTableRegister, ctrl.register);
 
 // SignIn
-router.post("/login", validateBody(schemas.loginSchema), ctrl.login);
+router.post("/login", isUserInTableLogin, ctrl.login);
 
 // isTokenActive
 router.get("/current", authenticate, ctrl.getCurrent);
@@ -23,13 +20,6 @@ router.get("/current", authenticate, ctrl.getCurrent);
 // Logout
 router.post("/logout", authenticate, ctrl.logout);
 
-// Change user data and isTokenValid
-router.patch(
-  "/account",
-  authenticate,
-  upload.single("avatar"),
-  ctrl.updateUser
-);
 router.get("/account", authenticate, ctrl.getUser);
 
 module.exports = router;
