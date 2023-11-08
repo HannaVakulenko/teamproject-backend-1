@@ -144,7 +144,7 @@ const updateUser = async (req, res) => {
 
     res.json({ name: result.name, email: result.email, skype: result.skype, phone: result.phone, birthday: result.birthday, avatarURL: result.avatarURL, theme: result.theme });
 };
-
+// Verification user email
 const getVerificationEmail = async (req, res) => {
     const { email } = req.body;
 
